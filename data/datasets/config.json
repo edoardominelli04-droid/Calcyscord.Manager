@@ -1,0 +1,8 @@
+{
+  "season": "2026/27",
+  "max_squad_size": 30,
+  "min_squad_size": 18,
+  "starting_budget": 50000000,
+  "max_contract_years": 5,
+  "currency": "€"
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "id": 1,
+    "name": "Stadio Giuseppe Meazza",
+    "city": "Milano",
+    "country_id": 1,
+    "capacity": 75817,
+    "photo": ""
+  }
+]
