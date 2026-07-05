@@ -60,6 +60,8 @@ def create_manager_rosters_table(cursor):
         is_bench INTEGER DEFAULT 0,
         bench_order INTEGER,
         is_captain INTEGER DEFAULT 0,
+        shirt_number INTEGER,
+        is_locked INTEGER DEFAULT 0,
         contract_expires_season INTEGER,
         acquired_at TEXT NOT NULL,
         UNIQUE(user_id, player_id),
@@ -74,6 +76,6 @@ def create_tables():
     create_manager_teams_table(cursor)
     create_manager_players_table(cursor)
     create_manager_rosters_table(cursor)
-    
+
     conn.commit()
     conn.close()
