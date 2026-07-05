@@ -50,12 +50,30 @@ def create_manager_players_table(cursor):
     """)
 
 
+def create_manager_rosters_table(cursor):
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS manager_rosters (
+        roster_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id TEXT NOT NULL,
+        player_id INTEGER NOT NULL,
+        is_starter INTEGER DEFAULT 0,
+        is_bench INTEGER DEFAULT 0,
+        bench_order INTEGER,
+        is_captain INTEGER DEFAULT 0,
+        contract_expires_season INTEGER,
+        acquired_at TEXT NOT NULL,
+        UNIQUE(user_id, player_id),
+        FOREIGN KEY(player_id) REFERENCES manager_players(player_id)
+    )
+    """)
+
 def create_tables():
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
     create_manager_teams_table(cursor)
     create_manager_players_table(cursor)
-
+    create_manager_rosters_table(cursor)
+    
     conn.commit()
     conn.close()
