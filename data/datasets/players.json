@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "name": "Lautaro Martinez",
+    "team": "Inter",
+    "competition": "Serie A",
+    "nationality": "Argentina",
+    "birth_date": "1997-08-22",
+    "position": "ATT",
+    "retired": false,
+    "photo": ""
+  },
+  {
+    "id": 2,
+    "name": "Nicolò Barella",
+    "team": "Inter",
+    "competition": "Serie A",
+    "nationality": "Italia",
+    "birth_date": "1997-02-07",
+    "position": "CC",
+    "retired": false,
+    "photo": ""
+  }
+]

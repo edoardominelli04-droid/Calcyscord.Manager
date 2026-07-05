@@ -1,5 +1,17 @@
 import os
 import requests
+from dotenv import load_dotenv
+
+from dotenv import load_dotenv
+from pathlib import Path
+
+env_path = Path(__file__).resolve().parents[2] / ".env"
+print("ENV PATH:", env_path)
+print("ENV EXISTS:", env_path.exists())
+
+load_dotenv(env_path)
+
+print("API KEY:", os.getenv("FOOTBALL_DATA_API_KEY"))
 
 from .base_provider import BaseProvider
 
@@ -9,6 +21,8 @@ class FootballDataProvider(BaseProvider):
 
     def __init__(self):
         self.api_key = os.getenv("FOOTBALL_DATA_API_KEY")
+
+        print("API KEY:", self.api_key)
 
         self.headers = {
             "X-Auth-Token": self.api_key
