@@ -1,0 +1,26 @@
+[
+    {
+        "manager_id": 1,
+        "balance": 50000000,
+        "transfer_budget": 50000000,
+        "salary_budget": 0,
+        "income_total": 0,
+        "expense_total": 0
+    },
+    {
+        "manager_id": 2,
+        "balance": 50000000,
+        "transfer_budget": 50000000,
+        "salary_budget": 0,
+        "income_total": 0,
+        "expense_total": 0
+    },
+    {
+        "manager_id": 3,
+        "balance": 50000000,
+        "transfer_budget": 50000000,
+        "salary_budget": 0,
+        "income_total": 0,
+        "expense_total": 0
+    }
+]
