@@ -1,17 +1,10 @@
-from services.database_manager import DatabaseManager
-from collections import Counter
+from services.validators.database_validator import DatabaseValidator
 
-db = DatabaseManager()
+validator = DatabaseValidator()
 
-players = db.get_players()
+errors = validator.validate()
 
-missing = Counter()
+print(f"Errori trovati: {len(errors)}")
 
-for player in players:
-    if player.get("nationality_id") is None:
-        missing[player.get("country")] += 1
-
-print("Nazioni non riconosciute:", len(missing))
-
-for country, count in missing.most_common(50):
-    print(country, count)
+for error in errors[:100]:
+    print("-", error)
