@@ -1,14 +1,10 @@
-from services.importers.team_importer import TeamImporter
+from services.importers.club_importer import ClubImporter
 
-importer = TeamImporter()
+importer = ClubImporter()
 
-team = importer.get_team_data(108)
+clubs = importer.link_stadiums()
 
-print(team["name"])
-print(team["short_name"])
-print(team["tla"])
-print(team["venue"])
-print("Giocatori trovati:", len(team["squad"]))
+print("Club aggiornati:", len(clubs))
 
-for player in team["squad"][:10]:
-    print(player.get("name"), "-", player.get("position"))
+for club in clubs[:10]:
+    print(club["id"], club["name"], "stadium_id:", club.get("stadium_id"))

@@ -1,0 +1,12 @@
+[
+    { "external_id": "IT1", "enabled": true, "priority": 1 },
+    { "external_id": "GB1", "enabled": true, "priority": 2 },
+    { "external_id": "CL", "enabled": true, "priority": 3 },
+    { "external_id": "ES1", "enabled": true, "priority": 4 },
+    { "external_id": "L1", "enabled": true, "priority": 5 },
+    { "external_id": "FR1", "enabled": true, "priority": 6 },
+    { "external_id": "NL1", "enabled": true, "priority": 7 },
+    { "external_id": "PO1", "enabled": true, "priority": 8 },
+    { "external_id": "EL", "enabled": true, "priority": 9 },
+    { "external_id": "UCOL", "enabled": true, "priority": 10 }
+]

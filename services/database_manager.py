@@ -3,13 +3,16 @@ from pathlib import Path
 
 
 class DatabaseManager:
-    """Gestisce la lettura e la scrittura dei dataset JSON."""
+    """Gestisce la lettura e la scrittura dei file JSON del progetto."""
 
     def __init__(self):
-        self.data_path = Path(__file__).resolve().parent.parent / "data" / "datasets"
+        base_path = Path(__file__).resolve().parent.parent / "data"
 
-    def _load_json(self, filename):
-        file_path = self.data_path / filename
+        self.datasets_path = base_path / "datasets"
+        self.config_path = base_path / "config"
+
+    def _load_json(self, folder, filename):
+        file_path = folder / filename
 
         if not file_path.exists():
             return []
@@ -17,54 +20,83 @@ class DatabaseManager:
         with open(file_path, "r", encoding="utf-8") as f:
             return json.load(f)
 
-    def _save_json(self, filename, data):
-        file_path = self.data_path / filename
+    def _save_json(self, folder, filename, data):
+        file_path = folder / filename
 
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
 
-    # ---------- LOAD ----------
+    # ==========================================================
+    # LOAD DATASETS
+    # ==========================================================
 
     def get_players(self):
-        return self._load_json("players.json")
+        return self._load_json(self.datasets_path, "players.json")
 
     def get_clubs(self):
-        return self._load_json("clubs.json")
+        return self._load_json(self.datasets_path, "clubs.json")
 
     def get_competitions(self):
-        return self._load_json("competitions.json")
+        return self._load_json(self.datasets_path, "competitions.json")
 
     def get_countries(self):
-        return self._load_json("countries.json")
+        return self._load_json(self.datasets_path, "countries.json")
 
     def get_stadiums(self):
-        return self._load_json("stadiums.json")
+        return self._load_json(self.datasets_path, "stadiums.json")
 
     def get_continents(self):
-        return self._load_json("continents.json")
+        return self._load_json(self.datasets_path, "continents.json")
 
     def get_config(self):
-        return self._load_json("config.json")
+        return self._load_json(self.datasets_path, "config.json")
 
-    # ---------- SAVE ----------
+    def get_managers(self):
+        return self._load_json(self.datasets_path, "managers.json")
+
+    # ==========================================================
+    # LOAD CONFIG
+    # ==========================================================
+
+    def get_competitions_config(self):
+        return self._load_json(self.config_path, "competitions.json")
+
+    def get_config_file(self, filename):
+        """Carica un qualsiasi file dalla cartella config."""
+        return self._load_json(self.config_path, filename)
+
+    # ==========================================================
+    # SAVE DATASETS
+    # ==========================================================
 
     def save_players(self, data):
-        self._save_json("players.json", data)
+        self._save_json(self.datasets_path, "players.json", data)
 
     def save_clubs(self, data):
-        self._save_json("clubs.json", data)
+        self._save_json(self.datasets_path, "clubs.json", data)
 
     def save_competitions(self, data):
-        self._save_json("competitions.json", data)
+        self._save_json(self.datasets_path, "competitions.json", data)
 
     def save_countries(self, data):
-        self._save_json("countries.json", data)
+        self._save_json(self.datasets_path, "countries.json", data)
 
     def save_stadiums(self, data):
-        self._save_json("stadiums.json", data)
+        self._save_json(self.datasets_path, "stadiums.json", data)
 
     def save_continents(self, data):
-        self._save_json("continents.json", data)
+        self._save_json(self.datasets_path, "continents.json", data)
 
     def save_config(self, data):
-        self._save_json("config.json", data)
+        self._save_json(self.datasets_path, "config.json", data)
+
+    def save_managers(self, data):
+        self._save_json(self.datasets_path, "managers.json", data)
+
+    # ==========================================================
+    # SAVE CONFIG
+    # ==========================================================
+
+    def save_config_file(self, filename, data):
+        """Salva un qualsiasi file nella cartella config."""
+        self._save_json(self.config_path, filename, data)

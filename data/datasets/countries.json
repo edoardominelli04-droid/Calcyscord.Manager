@@ -59,7 +59,7 @@
         "id": 9,
         "name": "Argentina",
         "code": "AR",
-        "continent_id": null,
+        "continent_id": 2,
         "flag": "🇦🇷"
     },
     {
@@ -101,7 +101,7 @@
         "id": 15,
         "name": "Australia",
         "code": "AU",
-        "continent_id": null,
+        "continent_id": 6,
         "flag": "🇦🇺"
     },
     {
@@ -129,7 +129,7 @@
         "id": 19,
         "name": "Belgium",
         "code": "BE",
-        "continent_id": null,
+        "continent_id": 1,
         "flag": "🇧🇪"
     },
     {
@@ -227,7 +227,7 @@
         "id": 33,
         "name": "Brazil",
         "code": "BR",
-        "continent_id": null,
+        "continent_id": 2,
         "flag": "🇧🇷"
     },
     {
@@ -276,7 +276,7 @@
         "id": 40,
         "name": "Canada",
         "code": "CA",
-        "continent_id": null,
+        "continent_id": 3,
         "flag": "🇨🇦"
     },
     {
@@ -290,14 +290,14 @@
         "id": 42,
         "name": "Switzerland",
         "code": "CH",
-        "continent_id": null,
+        "continent_id": 1,
         "flag": "🇨🇭"
     },
     {
         "id": 43,
         "name": "Chile",
         "code": "CL",
-        "continent_id": null,
+        "continent_id": 2,
         "flag": "🇨🇱"
     },
     {
@@ -311,7 +311,7 @@
         "id": 45,
         "name": "Côte d'Ivoire",
         "code": "CI",
-        "continent_id": null,
+        "continent_id": 4,
         "flag": "🇨🇮"
     },
     {
@@ -346,7 +346,7 @@
         "id": 50,
         "name": "Colombia",
         "code": "CO",
-        "continent_id": null,
+        "continent_id": 2,
         "flag": "🇨🇴"
     },
     {
@@ -416,7 +416,7 @@
         "id": 60,
         "name": "Germany",
         "code": "DE",
-        "continent_id": null,
+        "continent_id": 1,
         "flag": "🇩🇪"
     },
     {
@@ -486,7 +486,7 @@
         "id": 70,
         "name": "Spain",
         "code": "ES",
-        "continent_id": null,
+        "continent_id": 1,
         "flag": "🇪🇸"
     },
     {
@@ -528,7 +528,7 @@
         "id": 76,
         "name": "France",
         "code": "FR",
-        "continent_id": null,
+        "continent_id": 1,
         "flag": "🇫🇷"
     },
     {
@@ -556,7 +556,7 @@
         "id": 80,
         "name": "United Kingdom",
         "code": "GB",
-        "continent_id": null,
+        "continent_id": 1,
         "flag": "🇬🇧"
     },
     {
@@ -577,7 +577,7 @@
         "id": 83,
         "name": "Ghana",
         "code": "GH",
-        "continent_id": null,
+        "continent_id": 4,
         "flag": "🇬🇭"
     },
     {
@@ -780,7 +780,7 @@
         "id": 112,
         "name": "Italy",
         "code": "IT",
-        "continent_id": null,
+        "continent_id": 1,
         "flag": "🇮🇹"
     },
     {
@@ -808,7 +808,7 @@
         "id": 116,
         "name": "Japan",
         "code": "JP",
-        "continent_id": null,
+        "continent_id": 5,
         "flag": "🇯🇵"
     },
     {
@@ -857,7 +857,7 @@
         "id": 123,
         "name": "Korea, Republic of",
         "code": "KR",
-        "continent_id": null,
+        "continent_id": 5,
         "flag": "🇰🇷"
     },
     {
@@ -962,7 +962,7 @@
         "id": 138,
         "name": "Morocco",
         "code": "MA",
-        "continent_id": null,
+        "continent_id": 4,
         "flag": "🇲🇦"
     },
     {
@@ -997,7 +997,7 @@
         "id": 143,
         "name": "Mexico",
         "code": "MX",
-        "continent_id": null,
+        "continent_id": 3,
         "flag": "🇲🇽"
     },
     {
@@ -1144,7 +1144,7 @@
         "id": 164,
         "name": "Nigeria",
         "code": "NG",
-        "continent_id": null,
+        "continent_id": 4,
         "flag": "🇳🇬"
     },
     {
@@ -1165,7 +1165,7 @@
         "id": 167,
         "name": "Netherlands",
         "code": "NL",
-        "continent_id": null,
+        "continent_id": 1,
         "flag": "🇳🇱"
     },
     {
@@ -1193,7 +1193,7 @@
         "id": 171,
         "name": "New Zealand",
         "code": "NZ",
-        "continent_id": null,
+        "continent_id": 6,
         "flag": "🇳🇿"
     },
     {
@@ -1277,7 +1277,7 @@
         "id": 183,
         "name": "Portugal",
         "code": "PT",
-        "continent_id": null,
+        "continent_id": 1,
         "flag": "🇵🇹"
     },
     {
@@ -1340,7 +1340,7 @@
         "id": 192,
         "name": "Saudi Arabia",
         "code": "SA",
-        "continent_id": null,
+        "continent_id": 5,
         "flag": "🇸🇦"
     },
     {
@@ -1354,7 +1354,7 @@
         "id": 194,
         "name": "Senegal",
         "code": "SN",
-        "continent_id": null,
+        "continent_id": 4,
         "flag": "🇸🇳"
     },
     {
@@ -1585,7 +1585,7 @@
         "id": 227,
         "name": "Türkiye",
         "code": "TR",
-        "continent_id": null,
+        "continent_id": 1,
         "flag": "🇹🇷"
     },
     {
@@ -1634,14 +1634,14 @@
         "id": 234,
         "name": "Uruguay",
         "code": "UY",
-        "continent_id": null,
+        "continent_id": 2,
         "flag": "🇺🇾"
     },
     {
         "id": 235,
         "name": "United States",
         "code": "US",
-        "continent_id": null,
+        "continent_id": 3,
         "flag": "🇺🇸"
     },
     {
@@ -1741,5 +1741,19 @@
         "code": "ZW",
         "continent_id": null,
         "flag": "🇿🇼"
+    },
+    {
+        "id": 250,
+        "name": "Palestine",
+        "code": "PS",
+        "continent_id": null,
+        "flag": "🇵🇸"
+    },
+    {
+        "id": 251,
+        "name": "Bonaire",
+        "code": "BQ",
+        "continent_id": null,
+        "flag": "🇧🇶"
     }
 ]

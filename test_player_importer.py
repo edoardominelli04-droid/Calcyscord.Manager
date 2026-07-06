@@ -2,8 +2,17 @@ from services.importers.player_importer import PlayerImporter
 
 importer = PlayerImporter()
 
-players = importer.load_players()
+players = importer.import_players()
 
-print("Giocatori caricati:", len(players))
+print("Giocatori importati:", len(players))
 
-print("Primo giocatore:", players[0])
+for player in players[:10]:
+    print(
+        player["id"],
+        player["name"],
+        player["position"],
+        "nationality_id:",
+        player.get("nationality_id"),
+        "market_value:",
+        player["market_value"]
+    )

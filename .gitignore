@@ -5,3 +5,7 @@ __pycache__/
 .DS_Store
 *.db
 logs/
+
+data/source/transfermarkt/appearances.csv
+data/source/transfermarkt/game_events.csv
+data/source/transfermarkt/game_lineups.csv

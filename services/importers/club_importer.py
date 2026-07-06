@@ -1,21 +1,64 @@
-from services.sync_manager import SyncManager
+from services.database_manager import DatabaseManager
+from services.providers.transfermarkt_provider import TransfermarktProvider
+from services.mappers.club_mapper import ClubMapper
 
 
-class TeamImporter:
-    """Importa dati squadra da football-data.org."""
+class ClubImporter:
+    """Importa i club dal dataset Transfermarkt."""
 
     def __init__(self):
-        self.sync = SyncManager()
+        self.db = DatabaseManager()
+        self.provider = TransfermarktProvider()
 
-    def get_team_data(self, team_id):
-        team = self.sync.sync_team(team_id)
-
-        return {
-            "external_id": team.get("id"),
-            "name": team.get("name"),
-            "short_name": team.get("shortName"),
-            "tla": team.get("tla"),
-            "crest": team.get("crest"),
-            "venue": team.get("venue"),
-            "squad": team.get("squad", [])
+    def import_clubs(self):
+        competitions = self.db.get_competitions()
+        enabled_competition_ids = {
+            competition["external_id"]: competition["id"]
+            for competition in competitions
         }
+
+        clubs_df = self.provider.get_clubs()
+
+        clubs = []
+        next_id = 1
+
+        for _, row in clubs_df.iterrows():
+            competition_external_id = row["domestic_competition_id"]
+
+            if competition_external_id not in enabled_competition_ids:
+                continue
+
+            club = ClubMapper.from_transfermarkt(row, next_id)
+            club["competition_id"] = enabled_competition_ids[competition_external_id]
+
+            clubs.append(club)
+            next_id += 1
+
+        self.db.save_clubs(clubs)
+
+        return clubs
+    
+    def link_stadiums(self):
+        clubs = self.db.get_clubs()
+        stadiums = self.db.get_stadiums()
+
+        stadium_by_name = {
+            stadium["name"].strip().lower(): stadium["id"]
+            for stadium in stadiums
+            if stadium.get("name")
+        }
+
+        for club in clubs:
+            stadium_name = club.get("stadium_name")
+
+            if not stadium_name:
+                club["stadium_id"] = None
+                continue
+
+            club["stadium_id"] = stadium_by_name.get(
+                stadium_name.strip().lower()
+            )
+
+        self.db.save_clubs(clubs)
+
+        return clubs
