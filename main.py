@@ -36,6 +36,15 @@ async def on_ready():
     )
 
 
+@bot.event
+async def on_command_error(ctx, error):
+
+    if isinstance(error, commands.CommandNotFound):
+        return
+
+    raise error
+
+
 @bot.command()
 async def ping(ctx):
     await ctx.send("🏓 Pong!")
@@ -45,6 +54,8 @@ async def load_extensions():
     await bot.load_extension("cogs.club")
     await bot.load_extension("cogs.manager")
     await bot.load_extension("cogs.dev")
+    await bot.load_extension("cogs.roster")
+    await bot.load_extension("cogs.player")
 
 
 async def main():
