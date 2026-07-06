@@ -51,5 +51,22 @@
         "theme": "standard",
         "notifications": true,
         "active": true
+    },
+    {
+        "id": 4,
+        "discord_id": "595215755549736970",
+        "username": "Bassotto",
+        "club_id": 2,
+        "created_at": "2026-07-06T21:46:04.490022",
+        "level": 1,
+        "experience": 0,
+        "reputation": 0,
+        "wins": 0,
+        "draws": 0,
+        "losses": 0,
+        "trophies": [],
+        "theme": "standard",
+        "notifications": true,
+        "active": true
     }
 ]
