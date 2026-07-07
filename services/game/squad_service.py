@@ -1,4 +1,5 @@
 from services.database_manager import DatabaseManager
+from services.game.contract_service import ContractService
 
 
 class SquadService:
@@ -6,19 +7,13 @@ class SquadService:
 
     def __init__(self):
         self.db = DatabaseManager()
+        self.contract_service = ContractService()
 
     def get_all(self):
-        return self.db._load_json(
-            self.db.save_path,
-            "squads.json"
-        )
+        return self.db.get_squads()
 
     def save_all(self, squads):
-        self.db._save_json(
-            self.db.save_path,
-            "squads.json",
-            squads
-        )
+        self.db.save_squads(squads)
 
     def get_manager_players(self, manager_id):
         return [
@@ -41,11 +36,21 @@ class SquadService:
             if player["club_id"] != club_id:
                 continue
 
+            contract = self.contract_service.create_contract(
+                player,
+                manager_id
+            )
+
+            contract_id = None
+
+            if contract is not None:
+                contract_id = contract["id"]
+
             squad.append({
                 "manager_id": manager_id,
                 "club_id": club_id,
                 "player_id": player["id"],
-                "contract_id": None,
+                "contract_id": contract_id,
                 "status": "active"
             })
 

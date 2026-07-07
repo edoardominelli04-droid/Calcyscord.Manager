@@ -98,6 +98,18 @@ class DatabaseManager:
     def save_club_ownership(self, data):
         self._save_json(self.save_path, "club_ownership.json", data)
 
+    def get_squads(self):
+        return self._load_json(self.save_path, "squads.json")
+
+    def save_squads(self, data):
+        self._save_json(self.save_path, "squads.json", data)
+
+    def get_contracts(self):
+        return self._load_json(self.save_path, "contracts.json")
+
+    def save_contracts(self, data):
+        self._save_json(self.save_path, "contracts.json", data)
+
     # ==========================================================
     # CONFIG
     # ==========================================================
@@ -110,3 +122,57 @@ class DatabaseManager:
 
     def save_config_file(self, filename, data):
         self._save_json(self.config_path, filename, data)
+
+    # ==========================================================
+    # FINDERS
+    # ==========================================================
+
+    def get_player_by_id(self, player_id):
+        return next(
+            (
+                p
+                for p in self.get_players()
+                if p["id"] == player_id
+            ),
+            None
+        )
+
+    def get_club_by_id(self, club_id):
+        return next(
+            (
+                c
+                for c in self.get_clubs()
+                if c["id"] == club_id
+            ),
+            None
+        )
+
+    def get_competition_by_id(self, competition_id):
+        return next(
+            (
+                c
+                for c in self.get_competitions()
+                if c["id"] == competition_id
+            ),
+            None
+        )
+
+    def get_stadium_by_id(self, stadium_id):
+        return next(
+            (
+                s
+                for s in self.get_stadiums()
+                if s["id"] == stadium_id
+            ),
+            None
+        )
+
+    def get_contract_by_id(self, contract_id):
+        return next(
+            (
+                c
+                for c in self.get_contracts()
+                if c["id"] == contract_id
+            ),
+            None
+        )

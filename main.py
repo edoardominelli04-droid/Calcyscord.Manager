@@ -51,11 +51,14 @@ async def ping(ctx):
 
 
 async def load_extensions():
-    await bot.load_extension("cogs.club")
+    # await bot.load_extension("cogs.club")   # disattivato
+
     await bot.load_extension("cogs.manager")
     await bot.load_extension("cogs.dev")
     await bot.load_extension("cogs.roster")
     await bot.load_extension("cogs.player")
+    await bot.load_extension("cogs.club_dashboard")
+    await bot.load_extension("cogs.contract")
 
 
 async def main():
