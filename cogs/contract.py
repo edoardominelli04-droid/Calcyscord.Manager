@@ -4,7 +4,6 @@ from discord.ext import commands
 from services.database_manager import DatabaseManager
 from services.game.manager_service import ManagerService
 from services.game.squad_service import SquadService
-from services.game.contract_service import ContractService
 from services.utils.text_utils import normalize_text
 
 
@@ -14,52 +13,50 @@ class Contract(commands.Cog):
         self.bot = bot
 
         self.db = DatabaseManager()
-
         self.manager_service = ManagerService()
         self.squad_service = SquadService()
-        self.contract_service = ContractService()
 
     @commands.command(name="contratto")
     async def contratto(self, ctx, *, player_name: str):
 
-        manager = self.manager_service.get_by_discord_id(
-            ctx.author.id
-        )
+        manager = self.manager_service.get_by_discord_id(ctx.author.id)
 
         if manager is None:
             await ctx.send("❌ Devi prima registrarti con `!start`.")
             return
 
-        squad = self.squad_service.get_manager_players(
-            manager["id"]
-        )
+        squad = self.squad_service.get_manager_players(manager["id"])
+
+        if not squad:
+            await ctx.send("❌ Non hai ancora una rosa.")
+            return
+
+        search = normalize_text(player_name)
 
         matches = []
 
-        for member in squad:
-
-            player = self.db.get_player_by_id(
-                member["player_id"]
-            )
+        for squad_member in squad:
+            player = self.db.get_player_by_id(squad_member["player_id"])
 
             if player is None:
                 continue
 
-            if normalize_text(player_name) in normalize_text(player["name"]):
-                matches.append((player, member))
+            if search in normalize_text(player.get("name", "")):
+                matches.append((player, squad_member))
 
         if not matches:
             await ctx.send("❌ Giocatore non trovato nella tua rosa.")
             return
 
         if len(matches) > 1:
+            names = "\n".join(
+                f"• {player['name']}"
+                for player, _ in matches[:10]
+            )
 
             embed = discord.Embed(
                 title="🔎 Più giocatori trovati",
-                description="\n".join(
-                    f"• {player['name']}"
-                    for player, _ in matches[:10]
-                ),
+                description="Sii più specifico.\n\n" + names,
                 color=discord.Color.orange()
             )
 
@@ -68,17 +65,20 @@ class Contract(commands.Cog):
 
         player, squad_member = matches[0]
 
-        await ctx.send("DEBUG 1")
+        contract_id = squad_member.get("contract_id")
 
-        contract = self.db.get_contract_by_id(
-            squad_member["contract_id"]
-        )
+        if contract_id is None:
+            await ctx.send("❌ Questo giocatore non ha ancora un contratto collegato.")
+            return
 
-        await ctx.send("DEBUG 2")
+        contract = self.db.get_contract_by_id(contract_id)
 
         if contract is None:
             await ctx.send("❌ Contratto non trovato.")
             return
+
+        salary = int(contract.get("salary") or 0)
+        release_clause = contract.get("release_clause")
 
         embed = discord.Embed(
             title="📄 Contratto",
@@ -87,37 +87,37 @@ class Contract(commands.Cog):
 
         embed.add_field(
             name="👤 Giocatore",
-            value=player["name"],
+            value=str(player.get("name", "-")),
             inline=False
         )
 
         embed.add_field(
             name="📑 Tipo contratto",
-            value=contract["type"].capitalize(),
+            value=str(contract.get("type", "-")).capitalize(),
             inline=True
         )
 
         embed.add_field(
             name="🤝 Prestito",
-            value="Sì" if contract["is_loan"] else "No",
+            value="Sì" if contract.get("is_loan") else "No",
             inline=True
         )
 
         embed.add_field(
             name="💰 Stipendio",
-            value=f"{contract['salary']:,} €".replace(",", "."),
+            value=f"{salary:,} €".replace(",", "."),
             inline=True
         )
 
         embed.add_field(
             name="📅 Inizio",
-            value=str(contract["start_season"]),
+            value=str(contract.get("start_season", "-")),
             inline=True
         )
 
         embed.add_field(
             name="📅 Scadenza",
-            value=str(contract["end_season"]),
+            value=str(contract.get("end_season", "-")),
             inline=True
         )
 
@@ -125,25 +125,23 @@ class Contract(commands.Cog):
             name="📜 Clausola",
             value=(
                 "-"
-                if contract["release_clause"] is None
-                else f"{contract['release_clause']:,} €".replace(",", ".")
+                if release_clause is None
+                else f"{int(release_clause):,} €".replace(",", ".")
             ),
             inline=True
         )
 
         embed.add_field(
             name="🔄 Rinnovabile",
-            value="✅ Sì" if contract["renewable"] else "❌ No",
+            value="✅ Sì" if contract.get("renewable") else "❌ No",
             inline=True
         )
 
         embed.add_field(
             name="📌 Stato",
-            value=contract["status"].capitalize(),
+            value=str(contract.get("status", "-")).capitalize(),
             inline=True
         )
-
-        await ctx.send("DEBUG 3")
 
         await ctx.send(embed=embed)
 
