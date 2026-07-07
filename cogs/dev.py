@@ -90,6 +90,18 @@ class Dev(commands.Cog):
         self.db.save_contracts(contracts)
 
         # ==========================
+        # FORMAZIONI
+        # ==========================
+
+        formations = [
+            f
+            for f in self.db.get_formations()
+            if f["manager_id"] != manager_id
+        ]
+
+        self.db.save_formations(formations)
+
+        # ==========================
         # MESSAGGIO
         # ==========================
 
@@ -102,7 +114,8 @@ class Dev(commands.Cog):
                 "• Finanze\n"
                 "• Club assegnato\n"
                 "• Rosa\n"
-                "• Contratti"
+                "• Contratti\n"
+                "• Formazione"
             ),
             color=discord.Color.red()
         )

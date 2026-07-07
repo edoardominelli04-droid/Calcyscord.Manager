@@ -40,6 +40,7 @@ async def on_ready():
 async def on_command_error(ctx, error):
 
     if isinstance(error, commands.CommandNotFound):
+        print(f"COMANDO NON TROVATO: {ctx.message.content}")
         return
 
     raise error
@@ -51,14 +52,13 @@ async def ping(ctx):
 
 
 async def load_extensions():
-    # await bot.load_extension("cogs.club")   # disattivato
-
     await bot.load_extension("cogs.manager")
     await bot.load_extension("cogs.dev")
     await bot.load_extension("cogs.roster")
     await bot.load_extension("cogs.player")
     await bot.load_extension("cogs.club_dashboard")
     await bot.load_extension("cogs.contract")
+    await bot.load_extension("cogs.formation")
 
 
 async def main():

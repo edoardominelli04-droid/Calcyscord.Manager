@@ -109,6 +109,19 @@ class DatabaseManager:
 
     def save_contracts(self, data):
         self._save_json(self.save_path, "contracts.json", data)
+    
+    def get_formations(self):
+        return self._load_json(
+            self.save_path,
+            "formations.json"
+        )
+
+    def save_formations(self, data):
+        self._save_json(
+            self.save_path,
+            "formations.json",
+            data
+        )
 
     # ==========================================================
     # CONFIG
