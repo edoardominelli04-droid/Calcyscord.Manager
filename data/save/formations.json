@@ -1,7 +1,7 @@
 [
     {
         "manager_id": 4,
-        "module": "4-3-3",
+        "module": "4-2-3-1",
         "starting": {
             "GK": {
                 "player_id": 880,
@@ -28,17 +28,12 @@
                 "captain": false,
                 "vice_captain": false
             },
-            "CM1": {
+            "DM1": {
                 "player_id": 7632,
                 "captain": false,
                 "vice_captain": false
             },
-            "CM2": {
-                "player_id": 9142,
-                "captain": false,
-                "vice_captain": false
-            },
-            "CM3": {
+            "DM2": {
                 "player_id": 9185,
                 "captain": false,
                 "vice_captain": false
@@ -48,13 +43,18 @@
                 "captain": false,
                 "vice_captain": false
             },
-            "ST": {
-                "player_id": 3746,
+            "AM": {
+                "player_id": 9142,
                 "captain": false,
                 "vice_captain": false
             },
             "RW": {
                 "player_id": 8139,
+                "captain": false,
+                "vice_captain": false
+            },
+            "ST": {
+                "player_id": 3746,
                 "captain": false,
                 "vice_captain": false
             }

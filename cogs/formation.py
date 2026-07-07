@@ -5,6 +5,7 @@ from services.database_manager import DatabaseManager
 from services.game.manager_service import ManagerService
 from services.game.formation_service import FormationService
 from services.utils.position_utils import PositionUtils
+from services.utils.slot_utils import SlotUtils
 
 
 class Formation(commands.Cog):
@@ -70,17 +71,31 @@ class Formation(commands.Cog):
 
             riga = f"{slot:<4}• {nome} ({ruolo})"
 
-            if slot == "GK":
-                portiere.append(riga)
+            department = SlotUtils.department(slot)
 
-            elif slot.startswith(("LB", "CB", "RB")):
-                difensori.append(riga)
+            if department == "Goalkeeper":
 
-            elif slot.startswith("CM"):
-                centrocampisti.append(riga)
+                portiere.append(
+                    riga
+                )
 
-            else:
-                attaccanti.append(riga)
+            elif department == "Defence":
+
+                difensori.append(
+                    riga
+                )
+
+            elif department == "Midfield":
+
+                centrocampisti.append(
+                    riga
+               )
+
+            elif department == "Attack":
+
+                attaccanti.append(
+                    riga
+                )
 
         portieri_panchina = []
         difensori_panchina = []

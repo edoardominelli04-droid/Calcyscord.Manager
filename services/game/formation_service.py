@@ -1,5 +1,7 @@
 from services.database_manager import DatabaseManager
 from services.game.module_service import ModuleService
+from services.game.data.position_rules import POSITION_RULES
+from services.utils.slot_utils import SlotUtils
 
 
 class FormationService:
@@ -31,30 +33,20 @@ class FormationService:
                 return formation
 
         return None
-
+    
     # ==========================================================
-    # CREAZIONE FORMAZIONE
+    # BUILD FORMAZIONE
     # ==========================================================
 
-    def create_initial_formation(
+    def _build_formation(
         self,
         manager_id,
-        module_name=None
+        module_name
     ):
 
-        if self.get_manager_formation(manager_id):
-            raise ValueError(
-                "La formazione esiste già."
-            )
-
-        if module_name is None:
-            module_name = (
-                self.module_service.DEFAULT_MODULE
-            )
-
-        module = self.module_service.get_module(
+        slots = self.module_service.get_slots(
             module_name
-        )
+       )
 
         squad = [
 
@@ -77,17 +69,15 @@ class FormationService:
             if player is not None:
                 players.append(player)
 
-        compatible = (
-            module["compatible_positions"]
-        )
-
         starting = {}
 
         used_players = set()
 
-        for slot in module["slots"]:
+        for slot in slots:
 
-            wanted_positions = compatible[slot]
+            family = SlotUtils.family(slot)
+
+            wanted_positions = POSITION_RULES[family]
 
             selected = None
 
@@ -109,21 +99,9 @@ class FormationService:
 
             if selected is None:
 
-                category = None
-
-                if slot == "GK":
-                    category = "Goalkeeper"
-
-                elif slot.startswith(
-                    ("LB", "CB", "RB")
-                ):
-                    category = "Defence"
-
-                elif slot.startswith("CM"):
-                    category = "Midfield"
-
-                else:
-                    category = "Attack"
+                category = SlotUtils.department(
+                    slot
+                )
 
                 for player in players:
 
@@ -173,13 +151,38 @@ class FormationService:
 
         }
 
+        return formation
+
+    # ==========================================================
+    # CREAZIONE FORMAZIONE
+    # ==========================================================
+
+    def create_initial_formation(
+        self,
+        manager_id,
+        module_name=None
+    ):
+
+        if self.get_manager_formation(manager_id):
+            raise ValueError(
+                "La formazione esiste già."
+            )
+
+        if module_name is None:
+            module_name = (
+                self.module_service.DEFAULT_MODULE
+            )
+
+        formation = self._build_formation(
+            manager_id,
+            module_name
+        )
+
         formations = self.get_all()
 
         formations.append(
             formation
         )
-
-        print(formation)
 
         self.save_all(
             formations
@@ -224,44 +227,116 @@ class FormationService:
         return formation["bench"]
 
     # ==========================================================
-    # MODULO
+    # CREAZIONE FORMAZIONE
     # ==========================================================
 
-    def get_module(
+    def create_initial_formation(
         self,
-        manager_id
+        manager_id,
+        module_name=None
     ):
 
-        formation = self.get_manager_formation(
-            manager_id
+        if self.get_manager_formation(manager_id):
+            raise ValueError(
+                "La formazione esiste già."
+            )
+
+        if module_name is None:
+            module_name = (
+                self.module_service.DEFAULT_MODULE
+            )
+
+        formation = self._build_formation(
+            manager_id,
+            module_name
         )
 
-        if formation is None:
-            return None
+        formations = self.get_all()
 
-        return formation["module"]
+        formations.append(
+            formation
+        )
 
-    def set_module(
+        self.save_all(
+            formations
+        )
+
+        return formation
+
+    # ==========================================================
+    # CAMBIO MODULO
+    # ==========================================================
+
+    def change_module(
         self,
         manager_id,
         module_name
     ):
 
+        current = self.get_manager_formation(
+            manager_id
+        )
+
+        if current is None:
+            raise ValueError(
+                "Formazione non trovata."
+            )
+
+        # Verifica che il modulo esista
+        self.module_service.get_module(
+            module_name
+        )
+
+        new_formation = self._build_formation(
+            manager_id,
+            module_name
+        )
+
+        # Mantiene capitano e vicecapitano
+        # se il giocatore resta titolare
+
+        for slot, data in new_formation["starting"].items():
+
+            player_id = data["player_id"]
+
+            for old_slot, old_data in current[
+                "starting"
+            ].items():
+
+                if (
+                    old_data["player_id"]
+                    == player_id
+                ):
+
+                    data["captain"] = old_data[
+                        "captain"
+                    ]
+
+                    data["vice_captain"] = old_data[
+                        "vice_captain"
+                    ]
+
+                    break
+
         formations = self.get_all()
 
-        for formation in formations:
+        for index, formation in enumerate(
+            formations
+        ):
 
-            if formation["manager_id"] == manager_id:
+            if (
+                formation["manager_id"]
+                == manager_id
+            ):
 
-                formation["module"] = module_name
+                formations[index] = new_formation
+                break
 
-                self.save_all(
-                    formations
-                )
+        self.save_all(
+            formations
+        )
 
-                return formation
-
-        return None
+        return new_formation
 
     # ==========================================================
     # SLOT

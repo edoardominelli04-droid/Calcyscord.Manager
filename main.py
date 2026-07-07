@@ -59,6 +59,7 @@ async def load_extensions():
     await bot.load_extension("cogs.club_dashboard")
     await bot.load_extension("cogs.contract")
     await bot.load_extension("cogs.formation")
+    await bot.load_extension("cogs.module")
 
 
 async def main():
