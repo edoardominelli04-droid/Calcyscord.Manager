@@ -45,11 +45,9 @@ class Dev(commands.Cog):
         # FINANZE
         # ==========================
 
-        finances = self.db.get_finances()
-
         finances = [
             f
-            for f in finances
+            for f in self.db.get_finances()
             if f["manager_id"] != manager_id
         ]
 
@@ -59,41 +57,58 @@ class Dev(commands.Cog):
         # CLUB OWNERSHIP
         # ==========================
 
-        ownership = self.db.get_club_ownership()
-
         ownership = [
             o
-            for o in ownership
+            for o in self.db.get_club_ownership()
             if o["manager_id"] != manager_id
         ]
 
         self.db.save_club_ownership(ownership)
 
         # ==========================
-        # SQUAD
+        # ROSA
         # ==========================
-
-        squads = self.db._load_json(
-            self.db.save_path,
-            "squads.json"
-        )
 
         squads = [
             s
-            for s in squads
+            for s in self.db.get_squads()
             if s["manager_id"] != manager_id
         ]
 
-        self.db._save_json(
-            self.db.save_path,
-            "squads.json",
-            squads
-        )
+        self.db.save_squads(squads)
+
+        # ==========================
+        # CONTRATTI
+        # ==========================
+
+        contracts = [
+            c
+            for c in self.db.get_contracts()
+            if c["manager_id"] != manager_id
+        ]
+
+        self.db.save_contracts(contracts)
+
+        # ==========================
+        # MESSAGGIO
+        # ==========================
 
         embed = discord.Embed(
             title="🗑️ Reset completato",
-            description="Il tuo profilo di sviluppo è stato eliminato.",
+            description=(
+                "Il tuo profilo è stato eliminato.\n\n"
+                "Sono stati rimossi:\n"
+                "• Manager\n"
+                "• Finanze\n"
+                "• Club assegnato\n"
+                "• Rosa\n"
+                "• Contratti"
+            ),
             color=discord.Color.red()
+        )
+
+        embed.set_footer(
+            text="Puoi ricominciare con !start"
         )
 
         await ctx.send(embed=embed)

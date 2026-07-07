@@ -3,217 +3,217 @@
         "manager_id": 4,
         "club_id": 2,
         "player_id": 880,
-        "contract_id": 1,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 2034,
-        "contract_id": 2,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 3277,
-        "contract_id": 3,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 3746,
-        "contract_id": 4,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 5085,
-        "contract_id": 5,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 5859,
-        "contract_id": 6,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 7251,
-        "contract_id": 7,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 7632,
-        "contract_id": 8,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 7758,
-        "contract_id": 9,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 8139,
-        "contract_id": 10,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 8455,
-        "contract_id": 11,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 8932,
-        "contract_id": 12,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 9142,
-        "contract_id": 13,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 9185,
-        "contract_id": 14,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 9632,
-        "contract_id": 15,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 9865,
-        "contract_id": 16,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 10117,
-        "contract_id": 17,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 10128,
-        "contract_id": 18,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 10143,
-        "contract_id": 19,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 10474,
-        "contract_id": 20,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 11734,
-        "contract_id": 21,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 12670,
-        "contract_id": 22,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 12807,
-        "contract_id": 23,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 12879,
-        "contract_id": 24,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 13574,
-        "contract_id": 25,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 13664,
-        "contract_id": 26,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 13714,
-        "contract_id": 27,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 14033,
-        "contract_id": 28,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 14945,
-        "contract_id": 29,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 15038,
-        "contract_id": 30,
+        "contract_id": null,
         "status": "active"
     },
     {
         "manager_id": 4,
         "club_id": 2,
         "player_id": 15955,
-        "contract_id": 31,
+        "contract_id": null,
         "status": "active"
     }
 ]
