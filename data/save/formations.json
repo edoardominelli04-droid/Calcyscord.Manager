@@ -4,12 +4,12 @@
         "module": "4-2-3-1",
         "starting": {
             "GK": {
-                "player_id": 2034,
+                "player_id": 880,
                 "captain": false,
                 "vice_captain": false
             },
             "LB": {
-                "player_id": 8455,
+                "player_id": 14945,
                 "captain": false,
                 "vice_captain": false
             },
@@ -73,13 +73,13 @@
             12807,
             13574,
             13664,
-            13714,
             14033,
-            14945,
             15038,
             15955,
             12670,
-            880
+            13714,
+            8455,
+            2034
         ]
     }
 ]

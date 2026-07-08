@@ -149,6 +149,16 @@ class DatabaseManager:
             ),
             None
         )
+    
+    def get_manager_by_id(self, manager_id):
+        return next(
+            (
+                m
+                for m in self.get_managers()
+                if m["id"] == manager_id
+            ),
+            None
+        )
 
     def get_club_by_id(self, club_id):
         return next(

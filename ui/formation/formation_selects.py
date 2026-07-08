@@ -1,3 +1,4 @@
+import asyncio
 import discord
 
 
@@ -70,6 +71,7 @@ class FormationSlotSelect(discord.ui.Select):
             ephemeral=True
 
         )
+
 
 class FormationPlayerSelect(discord.ui.Select):
     """
@@ -150,11 +152,15 @@ class FormationPlayerSelect(discord.ui.Select):
         interaction: discord.Interaction
     ):
 
+        await interaction.response.defer(
+            ephemeral=True
+        )
+
         player_id = self.values[0]
 
         if player_id == "none":
 
-            await interaction.response.send_message(
+            await interaction.followup.send(
 
                 "❌ Nessun giocatore compatibile.",
 
@@ -179,7 +185,7 @@ class FormationPlayerSelect(discord.ui.Select):
 
         if not result["success"]:
 
-            await interaction.response.send_message(
+            await interaction.followup.send(
 
                 f"❌ {result['error']['message']}",
 
@@ -191,14 +197,38 @@ class FormationPlayerSelect(discord.ui.Select):
 
         data = result["data"]
 
-        await interaction.response.send_message(
+        embed = (
+            self.view_data
+            .formation_embed_builder
+            .build(
+                self.view_data.manager_id
+            )
+        )
+
+        await self.view_data.message.edit(
+
+            embed=embed,
+
+            view=self.view_data
+
+        )
+
+        await interaction.delete_original_response()
+
+        msg = await interaction.followup.send(
 
             "✅ "
             f"{data['new_player']['name']} "
-            "è stato schierato al posto di "
+            "sostituisce "
             f"{data['old_player']['name']} "
             f"nel ruolo **{data['slot']}**.",
 
-            ephemeral=True
+            ephemeral=True,
+
+            wait=True
 
         )
+
+        await asyncio.sleep(10)
+
+        await msg.delete()

@@ -18,7 +18,8 @@ class FormationView(discord.ui.View):
         self,
         manager_id,
         formation,
-        formation_service
+        formation_service,
+        formation_embed_builder
     ):
 
         super().__init__(
@@ -28,6 +29,10 @@ class FormationView(discord.ui.View):
         self.manager_id = manager_id
         self.formation = formation
         self.formation_service = formation_service
+        self.formation_embed_builder = formation_embed_builder
+        self.message = None
+
+        self.selected_slot = None
 
         self.add_item(
             SchieraButton(self)
