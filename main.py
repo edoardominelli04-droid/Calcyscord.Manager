@@ -66,6 +66,8 @@ async def main():
     async with bot:
         await load_extensions()
 
+        print(sorted([c.name for c in bot.commands]))
+
         print("COMANDI:")
         for cmd in bot.commands:
             print("-", cmd.name)

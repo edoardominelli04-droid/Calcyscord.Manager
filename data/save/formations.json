@@ -1,10 +1,10 @@
 [
     {
         "manager_id": 4,
-        "module": "4-2-3-1",
+        "module": "4-4-2",
         "starting": {
             "GK": {
-                "player_id": 880,
+                "player_id": 13714,
                 "captain": false,
                 "vice_captain": false
             },
@@ -20,7 +20,7 @@
             },
             "CB2": {
                 "player_id": 12879,
-                "captain": false,
+                "captain": true,
                 "vice_captain": false
             },
             "RB": {
@@ -77,9 +77,9 @@
             15038,
             15955,
             12670,
-            13714,
             8455,
-            2034
+            2034,
+            880
         ]
     }
 ]

@@ -3,94 +3,92 @@ from discord.ext import commands
 
 from services.game.club_service import ClubService
 
+from ui.club.club_embed import ClubEmbedBuilder
+from ui.club.club_view import ClubView
+
+from ui.roster.roster_embed import RosterEmbedBuilder
+
 
 class ClubDashboard(commands.Cog):
 
-    def __init__(self, bot):
+    def __init__(
+        self,
+        bot
+    ):
+
         self.bot = bot
+
         self.club_service = ClubService()
 
+        self.club_embed_builder = ClubEmbedBuilder()
+
+        self.roster_embed_builder = RosterEmbedBuilder()
+
     @commands.command(name="club")
-    async def club(self, ctx):
+    async def club(
+        self,
+        ctx
+    ):
+
+        print("A - Comando !club eseguito")
 
         try:
+
+            print("B - Recupero dati")
 
             data = self.club_service.get_manager_club(
                 ctx.author.id
             )
 
+            print("C - Dati recuperati")
+
         except ValueError as e:
-            await ctx.send(f"❌ {e}")
-            return
 
-        club = data["club"]
-        manager = data["manager"]
-        finance = data["finance"]
-        competition = data["competition"]
-        stadium = data["stadium"]
+            print("D - Errore recupero dati")
 
-        embed = discord.Embed(
-            title=f"🏟️ {club['name']}",
-            color=discord.Color.dark_green()
-        )
-
-        embed.add_field(
-            name="👔 Manager",
-            value=manager["username"],
-            inline=True
-        )
-
-        embed.add_field(
-            name="🏆 Competizione",
-            value=competition["name"] if competition else "-",
-            inline=True
-        )
-
-        embed.add_field(
-            name="📍 Stadio",
-            value=stadium["name"] if stadium else club.get("stadium_name", "-"),
-            inline=True
-        )
-
-        embed.add_field(
-            name="👥 Rosa",
-            value=data["players_count"],
-            inline=True
-        )
-
-        embed.add_field(
-            name="📈 Età media",
-            value=data["average_age"],
-            inline=True
-        )
-
-        embed.add_field(
-            name="💰 Budget",
-            value=f"{finance['balance']:,} €".replace(",", "."),
-            inline=True
-        )
-
-        embed.add_field(
-            name="💎 Valore rosa",
-            value=f"{int(data['market_value']):,} €".replace(",", "."),
-            inline=True
-        )
-
-        if data["most_valuable_player"]:
-
-            player = data["most_valuable_player"]
-
-            embed.add_field(
-                name="⭐ Giocatore più prezioso",
-                value=(
-                    f"{player['name']}\n"
-                    f"{int(player.get('market_value', 0) or 0):,} €".replace(",", ".")
-                ),
-                inline=False
+            await ctx.send(
+                f"❌ {e}"
             )
 
-        await ctx.send(embed=embed)
+            return
+
+        print("E - Costruzione embed")
+
+        embed = self.club_embed_builder.build(
+            data
+        )
+
+        print("F - Costruzione view")
+
+        view = ClubView(
+
+            self.club_service,
+
+            self.club_embed_builder,
+
+            self.roster_embed_builder,
+
+            data
+
+        )
+
+        print("G - Invio messaggio")
+
+        message = await ctx.send(
+
+            embed=embed,
+
+            view=view
+
+        )
+
+        print("H - Messaggio inviato")
+
+        view.message = message
 
 
 async def setup(bot):
-    await bot.add_cog(ClubDashboard(bot))
+
+    await bot.add_cog(
+        ClubDashboard(bot)
+    )

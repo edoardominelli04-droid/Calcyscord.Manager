@@ -1,8 +1,7 @@
 import discord
-from ui.formation.formation_selects import FormationSlotSelect
 
 
-class SchieraButton(discord.ui.Button):
+class RosaButton(discord.ui.Button):
 
     def __init__(
         self,
@@ -13,9 +12,9 @@ class SchieraButton(discord.ui.Button):
 
         super().__init__(
 
-            label="Schiera",
+            label="Rosa",
 
-            emoji="⚽",
+            emoji="👥",
 
             style=discord.ButtonStyle.primary,
 
@@ -28,28 +27,11 @@ class SchieraButton(discord.ui.Button):
         interaction: discord.Interaction
     ):
 
-        view = discord.ui.View(
-            timeout=120
+        await self.view_data.show_roster(
+            interaction
         )
 
-        view.add_item(
-            FormationSlotSelect(
-                self.view_data
-            )
-        )
-
-        await interaction.response.send_message(
-
-            "⚽ Seleziona lo slot da modificare.",
-
-            view=view,
-
-            ephemeral=True
-
-        )
-
-
-class ModuloButton(discord.ui.Button):
+class FormazioneButton(discord.ui.Button):
 
     def __init__(
         self,
@@ -60,9 +42,9 @@ class ModuloButton(discord.ui.Button):
 
         super().__init__(
 
-            label="Modulo",
+            label="Formazione",
 
-            emoji="📐",
+            emoji="📋",
 
             style=discord.ButtonStyle.secondary,
 
@@ -75,32 +57,15 @@ class ModuloButton(discord.ui.Button):
         interaction: discord.Interaction
     ):
 
-        from ui.formation.formation_module_select import (
-            FormationModuleSelect
-        )
-
-        view = discord.ui.View(
-            timeout=120
-        )
-
-        view.add_item(
-            FormationModuleSelect(
-                self.view_data
-            )
-        )
-
         await interaction.response.send_message(
 
-            "📐 Seleziona il nuovo modulo.",
-
-            view=view,
+            "🚧 Gestione formazione in sviluppo.",
 
             ephemeral=True
 
         )
 
-
-class CapitanoButton(discord.ui.Button):
+class MercatoButton(discord.ui.Button):
 
     def __init__(
         self,
@@ -111,11 +76,11 @@ class CapitanoButton(discord.ui.Button):
 
         super().__init__(
 
-            label="Capitano",
+            label="Mercato",
 
-            emoji="👑",
+            emoji="💰",
 
-            style=discord.ButtonStyle.success,
+            style=discord.ButtonStyle.secondary,
 
             row=0
 
@@ -126,32 +91,15 @@ class CapitanoButton(discord.ui.Button):
         interaction: discord.Interaction
     ):
 
-        from ui.formation.formation_captain_select import (
-            FormationCaptainSelect
-        )
-
-        view = discord.ui.View(
-            timeout=120
-        )
-
-        view.add_item(
-            FormationCaptainSelect(
-                self.view_data
-            )
-        )
-
         await interaction.response.send_message(
 
-            "👑 Seleziona il nuovo capitano.",
-
-            view=view,
+            "🚧 Gestione mercato in sviluppo.",
 
             ephemeral=True
 
         )
 
-
-class RicostruisciButton(discord.ui.Button):
+class ContrattiButton(discord.ui.Button):
 
     def __init__(
         self,
@@ -162,9 +110,77 @@ class RicostruisciButton(discord.ui.Button):
 
         super().__init__(
 
-            label="Ricostruisci",
+            label="Contratti",
 
-            emoji="🔄",
+            emoji="📜",
+
+            style=discord.ButtonStyle.secondary,
+
+            row=0
+
+        )
+
+    async def callback(
+        self,
+        interaction: discord.Interaction
+    ):
+
+        await interaction.response.send_message(
+
+            "🚧 Gestione contratti in sviluppo.",
+
+            ephemeral=True
+
+        )
+
+class ClassificaButton(discord.ui.Button):
+
+    def __init__(
+        self,
+        view
+    ):
+
+        self.view_data = view
+
+        super().__init__(
+
+            label="Classifica",
+
+            emoji="📊",
+
+            style=discord.ButtonStyle.secondary,
+
+            row=0
+
+        )
+
+    async def callback(
+        self,
+        interaction: discord.Interaction
+    ):
+
+        await interaction.response.send_message(
+
+            "🚧 Gestione classifica in sviluppo.",
+
+            ephemeral=True
+
+        )
+
+class NotificheButton(discord.ui.Button):
+
+    def __init__(
+        self,
+        view
+    ):
+
+        self.view_data = view
+
+        super().__init__(
+
+            label="Notifiche",
+
+            emoji="🔔",
 
             style=discord.ButtonStyle.secondary,
 
@@ -179,42 +195,7 @@ class RicostruisciButton(discord.ui.Button):
 
         await interaction.response.send_message(
 
-            "🚧 Ricostruzione formazione in sviluppo.",
-
-            ephemeral=True
-
-        )
-
-
-class ClubButton(discord.ui.Button):
-
-    def __init__(
-        self,
-        view
-    ):
-
-        self.view_data = view
-
-        super().__init__(
-
-            label="Club",
-
-            emoji="🏠",
-
-            style=discord.ButtonStyle.secondary,
-
-            row=1
-
-        )
-
-    async def callback(
-        self,
-        interaction: discord.Interaction
-    ):
-
-        await interaction.response.send_message(
-
-            "🚧 Ritorno al Club in sviluppo.",
+            "🚧 Gestione notifiche in sviluppo.",
 
             ephemeral=True
 

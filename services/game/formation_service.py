@@ -512,33 +512,108 @@ class FormationService:
         )
 
         if formation is None:
-            raise ValueError(
+
+            return self._error(
+                FORMATION_NOT_FOUND,
                 "Formazione non trovata."
             )
 
-        self.module_service.get_module(
-            module_name
+        if formation["module"] == module_name:
+
+            return self._error(
+                INVALID_OPERATION,
+                "Hai già questo modulo."
+            )
+
+        formation["module"] = module_name
+
+        result = self._save_formation(
+            formation
         )
 
-        formations = self.get_all()
+        if not result["success"]:
+            return result
 
-        new_formation = self._build_formation(
+        return self._success(
+
+            {
+
+                "formation": formation,
+
+                "module": module_name
+
+            }
+
+        )
+    
+    # ==========================================================
+    # CAPITANO
+    # ==========================================================
+
+    def set_captain(
+        self,
+        manager_id,
+        player_id
+    ):
+
+        formation = self.get_manager_formation(
+            manager_id
+        )
+
+        if formation is None:
+
+            return self._error(
+                FORMATION_NOT_FOUND,
+                "Formazione non trovata."
+            )
+
+        result = self._validate_player(
             manager_id,
-            module_name
+            player_id
         )
 
-        for i, current in enumerate(formations):
+        if not result["success"]:
+            return result
 
-            if current["manager_id"] == manager_id:
+        player = result["data"]["player"]
 
-                formations[i] = new_formation
-                break
+        found = False
 
-        self.save_all(
-            formations
+        for slot, data in formation["starting"].items():
+
+            data["captain"] = False
+
+            if data["player_id"] == player_id:
+
+                data["captain"] = True
+
+                found = True
+
+        if not found:
+
+            return self._error(
+                PLAYER_ALREADY_STARTER,
+                "Il giocatore non è titolare."
+            )
+
+        result = self._save_formation(
+            formation
         )
 
-        return new_formation
+        if not result["success"]:
+            return result
+
+        return self._success(
+
+            {
+
+                "formation": formation,
+
+                "player": player
+
+            }
+
+        )
 
     # ==========================================================
     # SCHIERA GIOCATORE
