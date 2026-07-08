@@ -4,7 +4,7 @@
         "module": "4-2-3-1",
         "starting": {
             "GK": {
-                "player_id": 880,
+                "player_id": 2034,
                 "captain": false,
                 "vice_captain": false
             },
@@ -19,7 +19,7 @@
                 "vice_captain": false
             },
             "CB2": {
-                "player_id": 12670,
+                "player_id": 12879,
                 "captain": false,
                 "vice_captain": false
             },
@@ -60,7 +60,6 @@
             }
         },
         "bench": [
-            2034,
             5859,
             7251,
             8932,
@@ -72,14 +71,15 @@
             10474,
             11734,
             12807,
-            12879,
             13574,
             13664,
             13714,
             14033,
             14945,
             15038,
-            15955
+            15955,
+            12670,
+            880
         ]
     }
 ]

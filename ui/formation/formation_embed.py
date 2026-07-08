@@ -1,58 +1,71 @@
 import discord
-from discord.ext import commands
-
-from services.database_manager import DatabaseManager
-from services.game.manager_service import ManagerService
-from services.game.formation_service import FormationService
-from services.utils.position_utils import PositionUtils
-from services.utils.slot_utils import SlotUtils
-from ui.formation.formation_view import FormationView
 
 
-class Formation(commands.Cog):
-    """Visualizzazione della formazione."""
+class FormationEmbedBuilder:
 
-    def __init__(self, bot):
-        self.bot = bot
+    def __init__(
+        self,
+        db,
+        formation_service,
+        position_utils
+    ):
 
-        self.db = DatabaseManager()
-        self.manager_service = ManagerService()
-        self.formation_service = FormationService()
-        self.position_utils = PositionUtils()
+        self.db = db
+        self.formation_service = formation_service
+        self.position_utils = position_utils
 
-    @commands.command(name="formazione")
-    async def formazione(self, ctx):
+    def build(
+        self,
+        manager_id
+    ):
 
-        manager = self.manager_service.get_by_discord_id(
-            ctx.author.id
+        manager = self.db.get_manager_by_id(
+            manager_id
         )
 
-        if manager is None:
-            await ctx.send("❌ Devi prima registrarti con `!start`.")
-            return
-
-        formation = self.formation_service.get_manager_formation(
-            manager["id"]
+        formation = (
+            self.formation_service.get_manager_formation(
+                manager_id
+            )
         )
 
-        if formation is None:
-            await ctx.send("❌ Nessuna formazione trovata.")
-            return
-
-        club = self.db.get_club_by_id(manager["club_id"])
-
-        starting = self.formation_service.get_starting_players_full(
-            manager["id"]
+        club = self.db.get_club_by_id(
+            manager["club_id"]
         )
 
-        bench = self.formation_service.get_bench_players_full(
-            manager["id"]
+        starting = (
+            self.formation_service.get_starting_players_full(
+                manager_id
+            )
         )
+
+        bench = (
+            self.formation_service.get_bench_players_full(
+                manager_id
+            )
+        )
+
+        # ==========================================
+        # Liste titolari
+        # ==========================================
 
         portiere = []
         difensori = []
         centrocampisti = []
         attaccanti = []
+
+        # ==========================================
+        # Liste panchina
+        # ==========================================
+
+        portieri_panchina = []
+        difensori_panchina = []
+        centrocampisti_panchina = []
+        attaccanti_panchina = []
+
+        # ==========================================
+        # Titolari
+        # ==========================================
 
         for slot, data in starting.items():
 
@@ -72,36 +85,37 @@ class Formation(commands.Cog):
 
             riga = f"{slot:<4}• {nome} ({ruolo})"
 
-            department = SlotUtils.department(slot)
+            department = self.position_utils.get_department(
+                player
+            )
 
-            if department == "Goalkeeper":
+            if department == "goalkeeper":
 
                 portiere.append(
                     riga
                 )
 
-            elif department == "Defence":
+            elif department == "defence":
 
                 difensori.append(
                     riga
                 )
 
-            elif department == "Midfield":
+            elif department == "midfield":
 
                 centrocampisti.append(
                     riga
-               )
+                )
 
-            elif department == "Attack":
+            elif department == "attack":
 
                 attaccanti.append(
                     riga
                 )
 
-        portieri_panchina = []
-        difensori_panchina = []
-        centrocampisti_panchina = []
-        attaccanti_panchina = []
+        # ==========================================
+        # Panchina
+        # ==========================================
 
         for player in bench:
 
@@ -111,19 +125,33 @@ class Formation(commands.Cog):
 
             riga = f"{player['name']} ({ruolo})"
 
-            department = self.position_utils.get_department(player)
+            department = self.position_utils.get_department(
+                player
+            )
 
             if department == "goalkeeper":
-                portieri_panchina.append(riga)
+
+                portieri_panchina.append(
+                    riga
+                )
 
             elif department == "defence":
-                difensori_panchina.append(riga)
+
+                difensori_panchina.append(
+                    riga
+                )
 
             elif department == "midfield":
-                centrocampisti_panchina.append(riga)
+
+                centrocampisti_panchina.append(
+                    riga
+                )
 
             elif department == "attack":
-                attaccanti_panchina.append(riga)
+
+                attaccanti_panchina.append(
+                    riga
+                )
 
         embed = discord.Embed(
             title="📋 Formazione",
@@ -182,6 +210,7 @@ class Formation(commands.Cog):
         panchina_text = ""
 
         if portieri_panchina:
+
             panchina_text += (
                 "**🧤 Portieri**\n"
                 + "\n".join(portieri_panchina)
@@ -189,6 +218,7 @@ class Formation(commands.Cog):
             )
 
         if difensori_panchina:
+
             panchina_text += (
                 "**🛡 Difensori**\n"
                 + "\n".join(difensori_panchina)
@@ -196,6 +226,7 @@ class Formation(commands.Cog):
             )
 
         if centrocampisti_panchina:
+
             panchina_text += (
                 "**⚙️ Centrocampisti**\n"
                 + "\n".join(centrocampisti_panchina)
@@ -203,6 +234,7 @@ class Formation(commands.Cog):
             )
 
         if attaccanti_panchina:
+
             panchina_text += (
                 "**⚽ Attaccanti**\n"
                 + "\n".join(attaccanti_panchina)
@@ -221,77 +253,4 @@ class Formation(commands.Cog):
             text="Usa i pulsanti qui sotto per gestire la formazione."
         )
 
-        print("1")
-
-        view = FormationView(
-            manager["id"],
-            formation,
-            self.formation_service
-        )
-
-        print("2")
-
-        await ctx.send(
-            embed=embed,
-            view=view
-        )
-
-        print("3")
-
-    # ==========================================================
-    # SCHIERA (DEBUG TEMPORANEO)
-    # ==========================================================
-
-    @commands.command(name="schiera")
-    async def schiera(
-        self,
-        ctx,
-        slot,
-        player_id: int
-    ):
-
-        manager = self.manager_service.get_by_discord_id(
-            ctx.author.id
-        )
-
-        if manager is None:
-
-            await ctx.send(
-                "❌ Devi prima registrarti con `!start`."
-            )
-
-            return
-
-        result = self.formation_service.swap_player(
-
-            manager["id"],
-
-            slot.upper(),
-
-            player_id
-
-        )
-
-        if not result["success"]:
-
-            await ctx.send(
-                f"❌ {result['error']['message']}"
-            )
-
-            return
-
-        data = result["data"]
-
-        await ctx.send(
-
-            "✅ "
-            f"{data['new_player']['name']} "
-            "sostituisce "
-            f"{data['old_player']['name']} "
-            f"nel ruolo **{data['slot']}**."
-
-        )
-
-
-async def setup(bot):
-    await bot.add_cog(Formation(bot))
+        return embed

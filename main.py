@@ -65,6 +65,11 @@ async def load_extensions():
 async def main():
     async with bot:
         await load_extensions()
+
+        print("COMANDI:")
+        for cmd in bot.commands:
+            print("-", cmd.name)
+
         await bot.start(TOKEN)
 
 

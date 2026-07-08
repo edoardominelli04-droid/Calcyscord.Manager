@@ -2,6 +2,7 @@ from services.database_manager import DatabaseManager
 from services.game.module_service import ModuleService
 from services.game.data.position_rules import POSITION_RULES
 from services.utils.slot_utils import SlotUtils
+from services.game.constants.errors import *
 
 
 class FormationService:
@@ -46,7 +47,7 @@ class FormationService:
 
         slots = self.module_service.get_slots(
             module_name
-       )
+        )
 
         squad = [
 
@@ -77,11 +78,15 @@ class FormationService:
 
             family = SlotUtils.family(slot)
 
-            wanted_positions = POSITION_RULES[family]
+            wanted_positions = POSITION_RULES[
+                family
+            ]
 
             selected = None
 
+            # ==========================================
             # Cerca prima il sottoruolo ideale
+            # ==========================================
 
             for player in players:
 
@@ -95,7 +100,9 @@ class FormationService:
                     selected = player
                     break
 
+            # ==========================================
             # Fallback sul ruolo principale
+            # ==========================================
 
             if selected is None:
 
@@ -137,9 +144,12 @@ class FormationService:
         for player in players:
 
             if player["id"] not in used_players:
-                bench.append(player["id"])
 
-        formation = {
+                bench.append(
+                    player["id"]
+                )
+
+        return {
 
             "manager_id": manager_id,
 
@@ -151,7 +161,231 @@ class FormationService:
 
         }
 
-        return formation
+    # ==========================================================
+    # PRIVATE
+    # ==========================================================
+
+    def _get_starting_slot_by_player(
+        self,
+        formation,
+        player_id
+    ):
+        """
+        Restituisce lo slot occupato dal giocatore.
+        Se non è titolare restituisce None.
+        """
+
+        for slot, data in formation["starting"].items():
+
+            if data["player_id"] == player_id:
+                return slot
+
+        return None
+
+    def _get_bench_player(
+        self,
+        formation,
+        player_id
+    ):
+        """
+        Verifica se il giocatore è in panchina.
+        Restituisce il player_id oppure None.
+        """
+
+        for bench_player in formation["bench"]:
+
+            if bench_player == player_id:
+                return bench_player
+
+        return None
+
+    def _validate_slot(
+        self,
+        formation,
+        slot
+    ):
+        """
+        Verifica che lo slot esista nella formazione.
+        """
+
+        if slot not in formation["starting"]:
+
+            return self._error(
+                INVALID_SLOT,
+                "Lo slot selezionato non esiste."
+            )
+
+        return self._success(
+            {
+                "slot": slot
+            }
+        )
+
+    def _validate_player(
+            self,
+            manager_id,
+            player_id
+        ):
+            """
+            Verifica che il giocatore esista e
+            appartenga alla rosa del manager.
+            """
+
+            player = self.db.get_player_by_id(
+                player_id
+            )
+
+            if player is None:
+
+                return self._error(
+                    PLAYER_NOT_FOUND,
+                    "Giocatore non trovato."
+                )
+
+            squad = self.db.get_squads()
+
+            found = False
+
+            for squad_player in squad:
+
+                if (
+                    squad_player["manager_id"] == manager_id
+                    and
+                    squad_player["player_id"] == player_id
+                ):
+
+                    found = True
+                    break
+
+            if not found:
+
+                return self._error(
+                    PLAYER_NOT_IN_SQUAD,
+                    "Il giocatore non appartiene alla tua rosa."
+                )
+
+            return self._success(
+                {
+                    "player": player
+                }
+            )
+
+    def _is_player_compatible(
+        self,
+        slot,
+        player
+    ):
+        """
+        Verifica se un giocatore può occupare
+        lo slot richiesto.
+        """
+
+        family = SlotUtils.family(
+            slot
+        )
+
+        wanted_positions = POSITION_RULES.get(
+            family,
+            []
+        )
+
+        if (
+            player.get("sub_position")
+            in wanted_positions
+        ):
+
+            return self._success(
+                {
+                    "compatible": True
+                }
+            )
+
+        category = SlotUtils.department(
+            slot
+        )
+
+        if (
+            player.get("position")
+            == category
+        ):
+
+            return self._success(
+                {
+                    "compatible": True
+                }
+            )
+
+        return self._error(
+            INCOMPATIBLE_POSITION,
+            "Il ruolo del giocatore non è compatibile con lo slot selezionato."
+        )
+
+    def _save_formation(
+        self,
+        formation
+    ):
+        """
+        Salva la formazione aggiornata.
+        """
+
+        formations = self.get_all()
+
+        for i, current in enumerate(formations):
+
+            if (
+                current["manager_id"]
+                == formation["manager_id"]
+            ):
+
+                formations[i] = formation
+
+                self.save_all(
+                    formations
+                )
+
+                return self._success(
+                    {
+                        "formation": formation
+                    }
+                )
+
+        return self._error(
+            SAVE_ERROR,
+            "Impossibile salvare la formazione."
+        )
+
+    def _success(
+        self,
+        data
+    ):
+
+        return {
+
+            "success": True,
+
+            "data": data
+
+        }
+
+    def _error(
+        self,
+        code,
+        message
+    ):
+
+        return {
+
+            "success": False,
+
+            "error": {
+
+                "code": code,
+
+                "message": message
+
+            }
+
+        }
 
     # ==========================================================
     # CREAZIONE FORMAZIONE
@@ -273,63 +507,31 @@ class FormationService:
         module_name
     ):
 
-        current = self.get_manager_formation(
+        formation = self.get_manager_formation(
             manager_id
         )
 
-        if current is None:
+        if formation is None:
             raise ValueError(
                 "Formazione non trovata."
             )
 
-        # Verifica che il modulo esista
         self.module_service.get_module(
             module_name
         )
+
+        formations = self.get_all()
 
         new_formation = self._build_formation(
             manager_id,
             module_name
         )
 
-        # Mantiene capitano e vicecapitano
-        # se il giocatore resta titolare
+        for i, current in enumerate(formations):
 
-        for slot, data in new_formation["starting"].items():
+            if current["manager_id"] == manager_id:
 
-            player_id = data["player_id"]
-
-            for old_slot, old_data in current[
-                "starting"
-            ].items():
-
-                if (
-                    old_data["player_id"]
-                    == player_id
-                ):
-
-                    data["captain"] = old_data[
-                        "captain"
-                    ]
-
-                    data["vice_captain"] = old_data[
-                        "vice_captain"
-                    ]
-
-                    break
-
-        formations = self.get_all()
-
-        for index, formation in enumerate(
-            formations
-        ):
-
-            if (
-                formation["manager_id"]
-                == manager_id
-            ):
-
-                formations[index] = new_formation
+                formations[i] = new_formation
                 break
 
         self.save_all(
@@ -337,6 +539,198 @@ class FormationService:
         )
 
         return new_formation
+
+    # ==========================================================
+    # SCHIERA GIOCATORE
+    # ==========================================================
+
+    def swap_player(
+        self,
+        manager_id,
+        slot,
+        player_id
+    ):
+
+        formation = self.get_manager_formation(
+            manager_id
+        )
+
+        if formation is None:
+
+            return self._error(
+                FORMATION_NOT_FOUND,
+                "Formazione non trovata."
+            )
+
+        # ==========================================
+        # Verifica slot
+        # ==========================================
+
+        result = self._validate_slot(
+            formation,
+            slot
+        )
+
+        if not result["success"]:
+            return result
+
+        # ==========================================
+        # Verifica giocatore
+        # ==========================================
+
+        result = self._validate_player(
+            manager_id,
+            player_id
+        )
+
+        if not result["success"]:
+            return result
+
+        player = result["data"]["player"]
+
+        # ==========================================
+        # Verifica che non sia già titolare
+        # ==========================================
+
+        starter_slot = self._get_starting_slot_by_player(
+            formation,
+            player_id
+        )
+
+        if starter_slot is not None:
+
+            return self._error(
+                PLAYER_ALREADY_STARTER,
+                "Il giocatore è già titolare."
+            )
+
+        # ==========================================
+        # Compatibilità ruolo
+        # ==========================================
+
+        result = self._is_player_compatible(
+            slot,
+            player
+        )
+
+        if not result["success"]:
+            return result
+
+        # ==========================================
+        # Recupera il vecchio titolare
+        # ==========================================
+
+        old_player_id = (
+            formation["starting"][slot]["player_id"]
+        )
+
+        old_player = self.db.get_player_by_id(
+            old_player_id
+        )
+
+        # ==========================================
+        # Aggiorna la panchina
+        # ==========================================
+
+        formation["bench"].remove(
+            player_id
+        )
+
+        formation["bench"].append(
+            old_player_id
+        )
+
+        # ==========================================
+        # Inserisce il nuovo titolare
+        # ==========================================
+
+        formation["starting"][slot][
+            "player_id"
+        ] = player_id
+
+        # ==========================================
+        # Salvataggio
+        # ==========================================
+
+        result = self._save_formation(
+            formation
+        )
+
+        if not result["success"]:
+            return result
+
+        # ==========================================
+        # Successo
+        # ==========================================
+
+        return self._success(
+
+            {
+
+                "slot": slot,
+
+                "old_player": old_player,
+
+                "new_player": player,
+
+                "formation": formation
+
+            }
+
+        )
+    
+    # ==========================================================
+    # GIOCATORI COMPATIBILI
+    # ==========================================================
+
+    def get_compatible_bench_players(
+        self,
+        manager_id,
+        slot
+    ):
+
+        formation = self.get_manager_formation(
+            manager_id
+        )
+
+        if formation is None:
+
+            return self._error(
+                FORMATION_NOT_FOUND,
+                "Formazione non trovata."
+            )
+
+        players = []
+
+        for player_id in formation["bench"]:
+
+            player = self.db.get_player_by_id(
+                player_id
+            )
+
+            if player is None:
+                continue
+
+            result = self._is_player_compatible(
+                slot,
+                player
+            )
+
+            if result["success"]:
+
+                players.append(
+                    player
+                )
+
+        return self._success(
+
+            {
+
+                "players": players
+
+            }
+
+        )
 
     # ==========================================================
     # SLOT
