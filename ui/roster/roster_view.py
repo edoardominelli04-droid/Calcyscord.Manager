@@ -57,3 +57,127 @@ class RosterView(discord.ui.View):
         self.add_item(
             BackClubButton(self)
         )
+
+    async def show_goalkeepers(
+        self,
+        interaction: discord.Interaction
+    ):
+
+        players = [
+
+            player
+
+            for player in self.data["players"]
+
+            if player["position"] == "Goalkeeper"
+
+        ]
+
+        embed = self.roster_embed_builder.build_goalkeepers(
+
+            self.data,
+
+            players
+
+        )
+
+        await interaction.response.edit_message(
+
+            embed=embed,
+
+            view=self
+
+        )
+
+    async def show_defenders(
+        self,
+        interaction: discord.Interaction
+    ):
+
+        players = [
+
+            player
+
+            for player in self.data["players"]
+
+            if player["position"] == "Defender"
+
+        ]
+
+        embed = self.roster_embed_builder.build_defenders(
+
+            self.data,
+
+            players
+
+        )
+
+        await interaction.response.edit_message(
+
+            embed=embed,
+
+            view=self
+
+        )
+
+    async def show_midfielders(
+        self,
+        interaction: discord.Interaction
+    ):
+
+        players = [
+
+            player
+
+            for player in self.data["players"]
+
+            if player["position"] == "Midfield"
+
+        ]
+
+        embed = self.roster_embed_builder.build_midfielders(
+
+            self.data,
+
+            players
+
+        )
+
+        await interaction.response.edit_message(
+
+            embed=embed,
+
+            view=self
+
+        )
+
+    async def show_attackers(
+        self,
+        interaction: discord.Interaction
+    ):
+
+        players = [
+
+            player
+
+            for player in self.data["players"]
+
+            if player["position"] == "Attack"
+
+        ]
+
+        embed = self.roster_embed_builder.build_attackers(
+
+            self.data,
+
+            players
+
+        )
+
+        await interaction.response.edit_message(
+
+            embed=embed,
+
+            view=self
+
+        )

@@ -31,12 +31,8 @@ class GoalkeepersButton(discord.ui.Button):
         interaction: discord.Interaction
     ):
 
-        await interaction.response.send_message(
-
-            "🚧 Gestione portieri in sviluppo.",
-
-            ephemeral=True
-
+        await self.view_data.show_goalkeepers(
+            interaction
         )
 
 
@@ -57,7 +53,7 @@ class DefendersButton(discord.ui.Button):
 
             label="Difensori",
 
-            emoji="🛡",
+            emoji="🛡️",
 
             style=discord.ButtonStyle.primary,
 
@@ -70,12 +66,8 @@ class DefendersButton(discord.ui.Button):
         interaction: discord.Interaction
     ):
 
-        await interaction.response.send_message(
-
-            "🚧 Gestione difensori in sviluppo.",
-
-            ephemeral=True
-
+        await self.view_data.show_defenders(
+            interaction
         )
 
 
@@ -109,12 +101,8 @@ class MidfieldersButton(discord.ui.Button):
         interaction: discord.Interaction
     ):
 
-        await interaction.response.send_message(
-
-            "🚧 Gestione centrocampisti in sviluppo.",
-
-            ephemeral=True
-
+        await self.view_data.show_midfielders(
+            interaction
         )
 
 
@@ -139,7 +127,7 @@ class AttackersButton(discord.ui.Button):
 
             style=discord.ButtonStyle.primary,
 
-            row=1
+            row=0
 
         )
 
@@ -148,17 +136,13 @@ class AttackersButton(discord.ui.Button):
         interaction: discord.Interaction
     ):
 
-        await interaction.response.send_message(
-
-            "🚧 Gestione attaccanti in sviluppo.",
-
-            ephemeral=True
-
+        await self.view_data.show_attackers(
+            interaction
         )
 
 
 # ==========================================================
-# CERCA
+# CERCA GIOCATORE
 # ==========================================================
 
 class SearchPlayerButton(discord.ui.Button):
@@ -213,9 +197,9 @@ class BackClubButton(discord.ui.Button):
 
             label="Club",
 
-            emoji="⬅️",
+            emoji="🏟️",
 
-            style=discord.ButtonStyle.success,
+            style=discord.ButtonStyle.secondary,
 
             row=1
 
