@@ -30,21 +30,13 @@ class ClubDashboard(commands.Cog):
         ctx
     ):
 
-        print("A - Comando !club eseguito")
-
         try:
-
-            print("B - Recupero dati")
 
             data = self.club_service.get_manager_club(
                 ctx.author.id
             )
 
-            print("C - Dati recuperati")
-
         except ValueError as e:
-
-            print("D - Errore recupero dati")
 
             await ctx.send(
                 f"❌ {e}"
@@ -52,13 +44,9 @@ class ClubDashboard(commands.Cog):
 
             return
 
-        print("E - Costruzione embed")
-
         embed = self.club_embed_builder.build(
             data
         )
-
-        print("F - Costruzione view")
 
         view = ClubView(
 
@@ -72,8 +60,6 @@ class ClubDashboard(commands.Cog):
 
         )
 
-        print("G - Invio messaggio")
-
         message = await ctx.send(
 
             embed=embed,
@@ -81,8 +67,6 @@ class ClubDashboard(commands.Cog):
             view=view
 
         )
-
-        print("H - Messaggio inviato")
 
         view.message = message
 
