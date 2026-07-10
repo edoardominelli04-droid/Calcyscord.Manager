@@ -9,6 +9,8 @@ from ui.roster.roster_buttons import (
     BackClubButton
 )
 
+from ui.roster.role_view import RoleView
+
 
 class RosterView(discord.ui.View):
 
@@ -58,9 +60,10 @@ class RosterView(discord.ui.View):
             BackClubButton(self)
         )
 
-    async def show_goalkeepers(
+    async def _open_role(
         self,
-        interaction: discord.Interaction
+        interaction: discord.Interaction,
+        role: str
     ):
 
         players = [
@@ -69,23 +72,38 @@ class RosterView(discord.ui.View):
 
             for player in self.data["players"]
 
-            if player["position"] == "Goalkeeper"
+            if player["position"] == role
 
         ]
 
-        embed = self.roster_embed_builder.build_goalkeepers(
+        view = RoleView(
+
+            self.roster_embed_builder,
 
             self.data,
 
-            players
+            players,
+
+            role
 
         )
 
-        await interaction.response.edit_message(
+        await view.show(
 
-            embed=embed,
+            interaction
 
-            view=self
+        )
+
+    async def show_goalkeepers(
+        self,
+        interaction: discord.Interaction
+    ):
+
+        await self._open_role(
+
+            interaction,
+
+            "Goalkeeper"
 
         )
 
@@ -94,29 +112,11 @@ class RosterView(discord.ui.View):
         interaction: discord.Interaction
     ):
 
-        players = [
+        await self._open_role(
 
-            player
+            interaction,
 
-            for player in self.data["players"]
-
-            if player["position"] == "Defender"
-
-        ]
-
-        embed = self.roster_embed_builder.build_defenders(
-
-            self.data,
-
-            players
-
-        )
-
-        await interaction.response.edit_message(
-
-            embed=embed,
-
-            view=self
+            "Defender"
 
         )
 
@@ -125,29 +125,11 @@ class RosterView(discord.ui.View):
         interaction: discord.Interaction
     ):
 
-        players = [
+        await self._open_role(
 
-            player
+            interaction,
 
-            for player in self.data["players"]
-
-            if player["position"] == "Midfield"
-
-        ]
-
-        embed = self.roster_embed_builder.build_midfielders(
-
-            self.data,
-
-            players
-
-        )
-
-        await interaction.response.edit_message(
-
-            embed=embed,
-
-            view=self
+            "Midfield"
 
         )
 
@@ -156,28 +138,10 @@ class RosterView(discord.ui.View):
         interaction: discord.Interaction
     ):
 
-        players = [
+        await self._open_role(
 
-            player
+            interaction,
 
-            for player in self.data["players"]
-
-            if player["position"] == "Attack"
-
-        ]
-
-        embed = self.roster_embed_builder.build_attackers(
-
-            self.data,
-
-            players
-
-        )
-
-        await interaction.response.edit_message(
-
-            embed=embed,
-
-            view=self
+            "Attack"
 
         )
