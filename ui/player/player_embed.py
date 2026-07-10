@@ -1,5 +1,78 @@
 import discord
+
 from datetime import datetime
+
+
+COUNTRIES = {
+
+    "Italy": "🇮🇹 Italia",
+    "France": "🇫🇷 Francia",
+    "Germany": "🇩🇪 Germania",
+    "Spain": "🇪🇸 Spagna",
+    "England": "🏴 Inghilterra",
+    "Portugal": "🇵🇹 Portogallo",
+    "Brazil": "🇧🇷 Brasile",
+    "Argentina": "🇦🇷 Argentina",
+    "Belgium": "🇧🇪 Belgio",
+    "Netherlands": "🇳🇱 Paesi Bassi"
+
+}
+
+
+POSITIONS = {
+
+    "Goalkeeper": "Portiere",
+    "Defender": "Difensore",
+    "Midfield": "Centrocampista",
+    "Attack": "Attaccante"
+
+}
+
+
+SUB_POSITIONS = {
+
+    "Centre-Forward": "Punta centrale",
+    "Second Striker": "Seconda punta",
+
+    "Left Winger": "Ala sinistra",
+    "Right Winger": "Ala destra",
+
+    "Attacking Midfield": "Trequartista",
+    "Central Midfield": "Centrocampista centrale",
+    "Defensive Midfield": "Mediano",
+
+    "Centre-Back": "Difensore centrale",
+    "Left-Back": "Terzino sinistro",
+    "Right-Back": "Terzino destro"
+
+}
+
+
+FEET = {
+
+    "right": "Destro",
+    "left": "Sinistro",
+    "both": "Ambidestro"
+
+}
+
+
+MONTHS = {
+
+    1: "gennaio",
+    2: "febbraio",
+    3: "marzo",
+    4: "aprile",
+    5: "maggio",
+    6: "giugno",
+    7: "luglio",
+    8: "agosto",
+    9: "settembre",
+    10: "ottobre",
+    11: "novembre",
+    12: "dicembre"
+
+}
 
 
 class PlayerEmbedBuilder:
@@ -50,19 +123,65 @@ class PlayerEmbedBuilder:
 
         )
 
-        value = int(
+        birth_date = (
+
+            f"{birth.day} "
+            f"{MONTHS[birth.month]} "
+            f"{birth.year}"
+
+        )
+
+        market_value = int(
 
             player.get("market_value") or 0
 
         )
 
-        value = f"€{value:,}".replace(",", ".")
+        market_value = (
+
+            f"€{market_value:,}"
+
+            .replace(",", ".")
+
+        )
+
+        country = COUNTRIES.get(
+
+            player["country"],
+
+            player["country"]
+
+        )
+
+        position = POSITIONS.get(
+
+            player["position"],
+
+            player["position"]
+
+        )
+
+        sub_position = SUB_POSITIONS.get(
+
+            player["sub_position"],
+
+            player["sub_position"]
+
+        )
+
+        foot = FEET.get(
+
+            player["preferred_foot"],
+
+            player["preferred_foot"]
+
+        )
 
         embed.add_field(
 
             name="🌍 Nazionalità",
 
-            value=player["country"],
+            value=country,
 
             inline=True
 
@@ -72,7 +191,7 @@ class PlayerEmbedBuilder:
 
             name="⚽ Ruolo",
 
-            value=f"{player['position']} ({player['sub_position']})",
+            value=f"{position} ({sub_position})",
 
             inline=True
 
@@ -82,7 +201,7 @@ class PlayerEmbedBuilder:
 
             name="💰 Valore",
 
-            value=value,
+            value=market_value,
 
             inline=False
 
@@ -92,7 +211,7 @@ class PlayerEmbedBuilder:
 
             name="📅 Nato",
 
-            value=birth.strftime("%d/%m/%Y"),
+            value=birth_date,
 
             inline=True
 
@@ -102,7 +221,7 @@ class PlayerEmbedBuilder:
 
             name="🎂 Età",
 
-            value=str(age),
+            value=f"{age} anni",
 
             inline=True
 
@@ -112,7 +231,7 @@ class PlayerEmbedBuilder:
 
             name="👣 Piede",
 
-            value=player["preferred_foot"].capitalize(),
+            value=foot,
 
             inline=True
 

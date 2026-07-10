@@ -78,6 +78,10 @@ class RosterView(discord.ui.View):
 
         view = RoleView(
 
+            self.club_service,
+
+            self.club_embed_builder,
+
             self.roster_embed_builder,
 
             self.data,
@@ -145,3 +149,38 @@ class RosterView(discord.ui.View):
             "Attack"
 
         )
+
+    async def show_club(
+        self,
+        interaction: discord.Interaction
+    ):
+
+        from ui.club.club_view import ClubView
+        
+        embed = self.club_embed_builder.build(
+
+            self.data
+
+        )
+
+        view = ClubView(
+
+            self.club_service,
+
+            self.club_embed_builder,
+
+            self.roster_embed_builder,
+
+            self.data
+
+        )
+
+        await interaction.response.edit_message(
+
+            embed=embed,
+
+            view=view
+
+        )
+
+        view.message = await interaction.original_response()

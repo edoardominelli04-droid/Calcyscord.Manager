@@ -1,12 +1,15 @@
 import discord
 
 from ui.player.player_select import PlayerSelect
+from ui.player.player_view import PlayerView
 
 
 class RoleView(discord.ui.View):
 
     def __init__(
         self,
+        club_service,
+        club_embed_builder,
         roster_embed_builder,
         data,
         players,
@@ -16,6 +19,10 @@ class RoleView(discord.ui.View):
         super().__init__(
             timeout=300
         )
+
+        self.club_service = club_service
+
+        self.club_embed_builder = club_embed_builder
 
         self.roster_embed_builder = roster_embed_builder
 
@@ -98,10 +105,46 @@ class RoleView(discord.ui.View):
         player_id: int
     ):
 
-        await interaction.response.send_message(
+        player = next(
 
-            f"👤 Giocatore selezionato: {player_id}",
+            (
+                p
+                for p in self.players
+                if p["id"] == player_id
+            ),
 
-            ephemeral=True
+            None
+
+        )
+
+        if player is None:
+
+            await interaction.response.send_message(
+
+                "❌ Giocatore non trovato.",
+
+                ephemeral=True
+
+            )
+
+            return
+
+        view = PlayerView(
+
+            self.club_service,
+
+            self.club_embed_builder,
+
+            self.roster_embed_builder,
+
+            self.data,
+
+            player
+
+        )
+
+        await view.show_player(
+
+            interaction
 
         )
