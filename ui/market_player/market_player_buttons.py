@@ -107,14 +107,11 @@ class OwnerButton(discord.ui.Button):
         interaction: discord.Interaction
     ):
 
-        await interaction.response.send_message(
+        await self.view_data.show_owner(
 
-            "🚧 Informazioni proprietario in sviluppo.",
-
-            ephemeral=True
+            interaction
 
         )
-
 
 # ==========================================================
 # STATISTICHE

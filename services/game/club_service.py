@@ -97,3 +97,82 @@ class ClubService:
     ):
 
         return self.db.get_players()
+    
+    def get_player_owner(
+        self,
+        player_id
+    ):
+
+        squads = self.db.get_squads()
+
+        ownership = self.db.get_club_ownership()
+
+        for member in squads:
+
+            if member["player_id"] != player_id:
+                continue
+
+            manager = self.db.get_manager_by_id(
+
+                member["manager_id"]
+
+            )
+
+            if manager is None:
+                break
+
+            club = self.db.get_club_by_id(
+
+                manager["club_id"]
+
+            )
+
+            return {
+
+                "manager": manager,
+
+                "club": club,
+
+                "is_bot": False
+
+            }
+
+        player = self.db.get_player_by_id(
+
+            player_id
+
+        )
+
+        if player is None:
+
+            return None
+
+        club = self.db.get_club_by_id(
+
+            player["club_id"]
+
+        )
+
+        manager = None
+
+        for record in ownership:
+
+            if record["club_id"] == club["id"]:
+
+                manager = self.db.get_manager_by_id(
+
+                    record["manager_id"]
+
+                )
+
+                break
+
+        return {
+
+            "manager": manager,
+
+            "club": club,
+
+            "is_bot": manager is None
+
+        }

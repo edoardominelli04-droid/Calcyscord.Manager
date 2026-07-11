@@ -1,16 +1,14 @@
 import discord
 
-from ui.market_player.market_player_embed import MarketPlayerEmbedBuilder
-from ui.market_player.market_player_buttons import (
-    BuyButton,
-    OwnerButton,
-    StatisticsButton,
-    ClubButton,
-    MarketButton
+from ui.market_owner.market_owner_embed import MarketOwnerEmbedBuilder
+from ui.market_owner.market_owner_buttons import (
+    PlayerButton,
+    MarketButton,
+    ClubButton
 )
 
 
-class MarketPlayerView(discord.ui.View):
+class MarketOwnerView(discord.ui.View):
 
     def __init__(
         self,
@@ -35,38 +33,38 @@ class MarketPlayerView(discord.ui.View):
 
         self.player = player
 
-        self.market_player_embed_builder = MarketPlayerEmbedBuilder()
+        self.market_owner_embed_builder = MarketOwnerEmbedBuilder()
 
         self.message = None
+
+        self.add_item(
+            PlayerButton(self)
+        )
 
         self.add_item(
             MarketButton(self)
         )
 
         self.add_item(
-            BuyButton(self)
-        )
-
-        self.add_item(
-            OwnerButton(self)
-        )
-
-        self.add_item(
-            StatisticsButton(self)
-        )
-
-        self.add_item(
             ClubButton(self)
         )
 
-    async def show_player(
+    async def show_owner(
         self,
         interaction: discord.Interaction
     ):
 
-        embed = self.market_player_embed_builder.build(
+        owner = self.club_service.get_player_owner(
 
-            self.player
+            self.player["id"]
+
+        )
+
+        embed = self.market_owner_embed_builder.build(
+
+            self.player,
+
+            owner
 
         )
 
@@ -80,14 +78,14 @@ class MarketPlayerView(discord.ui.View):
 
         self.message = await interaction.original_response()
 
-    async def show_statistics(
+    async def show_player(
         self,
         interaction: discord.Interaction
     ):
 
-        from ui.market_statistics.market_statistics_view import MarketStatisticsView
+        from ui.market_player.market_player_view import MarketPlayerView
 
-        view = MarketStatisticsView(
+        view = MarketPlayerView(
 
             self.club_service,
 
@@ -101,7 +99,32 @@ class MarketPlayerView(discord.ui.View):
 
         )
 
-        await view.show_statistics(
+        await view.show_player(
+
+            interaction
+
+        )
+
+    async def show_market(
+        self,
+        interaction: discord.Interaction
+    ):
+
+        from ui.market.market_view import MarketView
+
+        view = MarketView(
+
+            self.club_service,
+
+            self.club_embed_builder,
+
+            self.roster_embed_builder,
+
+            self.data
+
+        )
+
+        await view.show_market(
 
             interaction
 
@@ -141,55 +164,3 @@ class MarketPlayerView(discord.ui.View):
         )
 
         view.message = await interaction.original_response()
-
-    async def show_market(
-        self,
-        interaction: discord.Interaction
-    ):
-
-        from ui.market.market_view import MarketView
-
-        view = MarketView(
-
-            self.club_service,
-
-            self.club_embed_builder,
-
-            self.roster_embed_builder,
-
-            self.data
-
-        )
-
-        await view.show_market(
-
-            interaction
-
-        )
-
-    async def show_owner(
-        self,
-        interaction: discord.Interaction
-    ):
-
-        from ui.market_owner.market_owner_view import MarketOwnerView
-
-        view = MarketOwnerView(
-
-            self.club_service,
-
-            self.club_embed_builder,
-
-            self.roster_embed_builder,
-
-            self.data,
-
-            self.player
-
-        )
-
-        await view.show_owner(
-
-            interaction
-
-        )
