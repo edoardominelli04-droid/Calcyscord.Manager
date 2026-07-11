@@ -1,4 +1,5 @@
 import discord
+from datetime import date
 
 
 class ContractEmbedBuilder:
@@ -12,6 +13,69 @@ class ContractEmbedBuilder:
         self,
         player
     ):
+
+        # ======================================================
+        # DATI CONTRATTO (temporanei)
+        # ======================================================
+
+        salary = "€ ---"
+
+        expiry_date = None
+
+        duration = "---"
+
+        negotiation = False
+
+        renewed = False
+
+        released = False
+
+        # ======================================================
+        # STATO CONTRATTO
+        # ======================================================
+
+        if released:
+
+            status = "⚫ Svincolato"
+
+        elif renewed:
+
+            status = "🔵 Rinnovato"
+
+        elif negotiation:
+
+            status = "🟠 In trattativa"
+
+        elif expiry_date is None:
+
+            status = "🟢 In vigore"
+
+        else:
+
+            today = date.today()
+
+            months_left = (
+
+                (expiry_date.year - today.year) * 12
+                + (expiry_date.month - today.month)
+
+            )
+
+            if months_left < 0:
+
+                status = "🔴 Scaduto"
+
+            elif months_left <= 6:
+
+                status = "🟡 In scadenza"
+
+            else:
+
+                status = "🟢 In vigore"
+
+        # ======================================================
+        # EMBED
+        # ======================================================
 
         embed = discord.Embed(
 
@@ -31,7 +95,7 @@ class ContractEmbedBuilder:
 
             name="💰 Stipendio",
 
-            value="€ ---",
+            value=salary,
 
             inline=True
 
@@ -41,7 +105,7 @@ class ContractEmbedBuilder:
 
             name="📅 Scadenza",
 
-            value="Da definire",
+            value="Da definire" if expiry_date is None else expiry_date.strftime("%d/%m/%Y"),
 
             inline=True
 
@@ -49,9 +113,19 @@ class ContractEmbedBuilder:
 
         embed.add_field(
 
-            name="⏳ Durata residua",
+            name="⌛ Durata",
 
-            value="---",
+            value=duration,
+
+            inline=True
+
+        )
+
+        embed.add_field(
+
+            name="📄 Stato",
+
+            value=status,
 
             inline=True
 

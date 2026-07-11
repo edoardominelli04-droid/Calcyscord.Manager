@@ -19,31 +19,21 @@ COUNTRIES = {
 }
 
 
-POSITIONS = {
+SUBPOSITION_TRANSLATIONS = {
 
     "Goalkeeper": "Portiere",
-    "Defender": "Difensore",
-    "Midfield": "Centrocampista",
-    "Attack": "Attaccante"
-
-}
-
-
-SUB_POSITIONS = {
-
-    "Centre-Forward": "Punta centrale",
-    "Second Striker": "Seconda punta",
-
-    "Left Winger": "Ala sinistra",
-    "Right Winger": "Ala destra",
-
-    "Attacking Midfield": "Trequartista",
-    "Central Midfield": "Centrocampista centrale",
+    "Centre-Back": "Difensore Centrale",
+    "Left-Back": "Terzino Sinistro",
+    "Right-Back": "Terzino Destro",
     "Defensive Midfield": "Mediano",
-
-    "Centre-Back": "Difensore centrale",
-    "Left-Back": "Terzino sinistro",
-    "Right-Back": "Terzino destro"
+    "Central Midfield": "Centrocampista Centrale",
+    "Attacking Midfield": "Trequartista",
+    "Left Midfield": "Centrocampista Sinistro",
+    "Right Midfield": "Centrocampista Destro",
+    "Left Winger": "Ala Sinistra",
+    "Right Winger": "Ala Destra",
+    "Centre-Forward": "Attaccante Centrale",
+    "Second Striker": "Seconda Punta"
 
 }
 
@@ -131,15 +121,15 @@ class PlayerEmbedBuilder:
 
         )
 
-        market_value = int(
+        market_value = player.get(
 
-            player.get("market_value") or 0
+            "market_value"
 
-        )
+        ) or 0
 
         market_value = (
 
-            f"€{market_value:,}"
+            f"€{int(market_value):,}"
 
             .replace(",", ".")
 
@@ -153,15 +143,7 @@ class PlayerEmbedBuilder:
 
         )
 
-        position = POSITIONS.get(
-
-            player["position"],
-
-            player["position"]
-
-        )
-
-        sub_position = SUB_POSITIONS.get(
+        sub_position = SUBPOSITION_TRANSLATIONS.get(
 
             player["sub_position"],
 
@@ -174,6 +156,22 @@ class PlayerEmbedBuilder:
             player["preferred_foot"],
 
             player["preferred_foot"]
+
+        )
+
+        height = player.get(
+
+            "height_cm"
+
+        )
+
+        height = (
+
+            f"{int(height)} cm"
+
+            if height
+
+            else "---"
 
         )
 
@@ -191,7 +189,7 @@ class PlayerEmbedBuilder:
 
             name="⚽ Ruolo",
 
-            value=f"{position} ({sub_position})",
+            value=sub_position,
 
             inline=True
 
@@ -209,11 +207,11 @@ class PlayerEmbedBuilder:
 
         embed.add_field(
 
-            name="📅 Nato",
+            name="📅 Data di nascita",
 
             value=birth_date,
 
-            inline=True
+            inline=False
 
         )
 
@@ -241,7 +239,7 @@ class PlayerEmbedBuilder:
 
             name="📏 Altezza",
 
-            value=f"{int(player['height_cm'])} cm",
+            value=height,
 
             inline=True
 

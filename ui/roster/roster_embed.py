@@ -1,6 +1,22 @@
 import discord
 
 
+COUNTRIES = {
+
+    "Italy": "🇮🇹",
+    "France": "🇫🇷",
+    "Germany": "🇩🇪",
+    "Spain": "🇪🇸",
+    "England": "🏴",
+    "Portugal": "🇵🇹",
+    "Brazil": "🇧🇷",
+    "Argentina": "🇦🇷",
+    "Belgium": "🇧🇪",
+    "Netherlands": "🇳🇱"
+
+}
+
+
 class RosterEmbedBuilder:
 
     def __init__(
@@ -15,6 +31,52 @@ class RosterEmbedBuilder:
 
         club = data["club"]
 
+        goalkeepers = sum(
+
+            1
+
+            for p in data["players"]
+
+            if p["position"] == "Goalkeeper"
+
+        )
+
+        defenders = sum(
+
+            1
+
+            for p in data["players"]
+
+            if p["position"] == "Defender"
+
+        )
+
+        midfielders = sum(
+
+            1
+
+            for p in data["players"]
+
+            if p["position"] == "Midfield"
+
+        )
+
+        attackers = sum(
+
+            1
+
+            for p in data["players"]
+
+            if p["position"] == "Attack"
+
+        )
+
+        total = len(
+
+            data["players"]
+
+        )
+
         embed = discord.Embed(
 
             title=f"👥 Rosa - {club['name']}",
@@ -24,31 +86,59 @@ class RosterEmbedBuilder:
         )
 
         embed.add_field(
+
             name="🧤 Portieri",
-            value="2",
-            inline=True
+
+            value=str(goalkeepers),
+
+            inline=False
+
         )
 
         embed.add_field(
-            name="🛡 Difensori",
-            value="8",
-            inline=True
+
+            name="🛡️ Difensori",
+
+            value=str(defenders),
+
+            inline=False
+
         )
 
         embed.add_field(
+
             name="⚙️ Centrocampisti",
-            value="7",
-            inline=True
+
+            value=str(midfielders),
+
+            inline=False
+
         )
 
         embed.add_field(
+
             name="⚽ Attaccanti",
-            value="5",
-            inline=True
+
+            value=str(attackers),
+
+            inline=False
+
+        )
+
+        embed.add_field(
+
+            name="👥 Totale giocatori",
+
+            value=str(total),
+
+            inline=False
+
         )
 
         embed.set_footer(
-            text="Seleziona un reparto tramite i pulsanti."
+
+            text="Calcyscord.Manager • Rosa"
+
         )
 
         return embed
@@ -74,35 +164,55 @@ class RosterEmbedBuilder:
         if not players:
 
             embed.description = (
+
                 f"Nessun {title.lower()} presente in rosa."
+
             )
 
         else:
 
             for player in players:
 
-                value = int(player.get("market_value") or 0)
+                value = int(
+
+                    player.get(
+
+                        "market_value"
+
+                    ) or 0
+
+                )
 
                 market_value = (
+
                     f"€{value:,}"
+
                     .replace(",", ".")
+
+                )
+
+                country = COUNTRIES.get(
+
+                    player["country"],
+
+                    "🌍"
+
                 )
 
                 embed.add_field(
 
-                    name=player["name"],
+                    name=f"{country} {player['name']}",
 
-                    value=(
-                        f"🌍 {player['country']}\n"
-                        f"💰 {market_value}"
-                    ),
+                    value=f"💰 {market_value}",
 
                     inline=False
 
                 )
 
         embed.set_footer(
+
             text="Calcyscord.Manager • Rosa"
+
         )
 
         return embed
@@ -114,10 +224,15 @@ class RosterEmbedBuilder:
     ):
 
         return self._build_role_embed(
+
             data,
+
             players,
+
             "Portieri",
+
             "🧤"
+
         )
 
     def build_defenders(
@@ -127,10 +242,15 @@ class RosterEmbedBuilder:
     ):
 
         return self._build_role_embed(
+
             data,
+
             players,
+
             "Difensori",
+
             "🛡️"
+
         )
 
     def build_midfielders(
@@ -140,10 +260,15 @@ class RosterEmbedBuilder:
     ):
 
         return self._build_role_embed(
+
             data,
+
             players,
+
             "Centrocampisti",
+
             "⚙️"
+
         )
 
     def build_attackers(
@@ -153,21 +278,26 @@ class RosterEmbedBuilder:
     ):
 
         return self._build_role_embed(
+
             data,
+
             players,
+
             "Attaccanti",
+
             "⚽"
+
         )
-    
+
     def build_search(
         self
     ):
 
         embed = discord.Embed(
 
-            title="🔍 Cerca giocatore",
+            title="🔎 Cerca giocatori nella tua rosa",
 
-            description="Seleziona un giocatore della tua rosa.",
+            description="Inserisci il nome del giocatore da cercare.",
 
             color=discord.Color.blue()
 

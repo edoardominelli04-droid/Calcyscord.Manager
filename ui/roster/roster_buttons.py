@@ -1,5 +1,6 @@
 import discord
 
+from ui.search.search_modal import SearchModal
 
 # ==========================================================
 # PORTIERI
@@ -171,12 +172,21 @@ class SearchPlayerButton(discord.ui.Button):
         interaction: discord.Interaction
     ):
 
-        await self.view_data.show_search(
+        await interaction.response.send_modal(
 
-            interaction
+            SearchModal(
+
+                self.view_data.club_service,
+
+                self.view_data.club_embed_builder,
+
+                self.view_data.roster_embed_builder,
+
+                self.view_data.data
+
+            )
 
         )
-
 
 # ==========================================================
 # TORNA AL CLUB

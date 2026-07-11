@@ -49,7 +49,7 @@ class StatisticsEmbedBuilder:
 
         embed.add_field(
 
-            name="⏱️ Minuti",
+            name="🏟️ Presenze",
 
             value="---",
 
@@ -59,7 +59,7 @@ class StatisticsEmbedBuilder:
 
         embed.add_field(
 
-            name="🏟️ Presenze",
+            name="⏱️ Minuti giocati",
 
             value="---",
 
@@ -73,7 +73,7 @@ class StatisticsEmbedBuilder:
 
             value="---",
 
-            inline=True
+            inline=False
 
         )
 

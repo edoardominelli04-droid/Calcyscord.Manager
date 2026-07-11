@@ -150,45 +150,6 @@ class RosterView(discord.ui.View):
 
         )
 
-    async def show_search(
-        self,
-        interaction: discord.Interaction
-    ):
-
-        print("SEARCH 1")
-        
-        view = RoleView(
-
-            self.club_service,
-
-            self.club_embed_builder,
-
-            self.roster_embed_builder,
-
-            self.data,
-
-            self.data["players"],
-
-            "Search"
-
-        )
-
-        print("SEARCH 2")
-
-        embed = self.roster_embed_builder.build_search()
-
-        print("SEARCH 3")
-
-        await interaction.response.edit_message(
-
-            embed=embed,
-
-            view=view
-
-        )
-
-        view.message = await interaction.original_response()
-
     async def show_club(
         self,
         interaction: discord.Interaction
