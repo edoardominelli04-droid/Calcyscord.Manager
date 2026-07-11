@@ -10,6 +10,7 @@ from ui.club.club_buttons import (
 )
 
 from ui.roster.roster_view import RosterView
+from ui.market.market_view import MarketView
 
 
 class ClubView(discord.ui.View):
@@ -62,7 +63,9 @@ class ClubView(discord.ui.View):
     ):
 
         embed = self.roster_embed_builder.build(
+
             self.data
+
         )
 
         view = RosterView(
@@ -86,3 +89,26 @@ class ClubView(discord.ui.View):
         )
 
         view.message = await interaction.original_response()
+
+    async def show_market(
+        self,
+        interaction: discord.Interaction
+    ):
+
+        view = MarketView(
+
+            self.club_service,
+
+            self.club_embed_builder,
+
+            self.roster_embed_builder,
+
+            self.data
+
+        )
+
+        await view.show_market(
+
+            interaction
+
+        )

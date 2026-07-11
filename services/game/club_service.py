@@ -91,3 +91,9 @@ class ClubService:
             "market_value": market_value,
             "most_valuable_player": most_valuable
         }
+
+    def get_all_players(
+        self
+    ):
+
+        return self.db.get_players()
