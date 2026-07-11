@@ -81,13 +81,29 @@ class RoleView(discord.ui.View):
 
             )
 
-        else:
+        elif self.role == "Attack":
 
             embed = self.roster_embed_builder.build_attackers(
 
                 self.data,
 
                 self.players
+
+            )
+
+        elif self.role == "Search":
+
+            embed = self.roster_embed_builder.build_search()
+
+        else:
+
+            embed = discord.Embed(
+
+                title="❌ Errore",
+
+                description="Ruolo non riconosciuto.",
+
+                color=discord.Color.red()
 
             )
 
@@ -98,6 +114,8 @@ class RoleView(discord.ui.View):
             view=self
 
         )
+
+        self.message = await interaction.original_response()
 
     async def show_player(
         self,

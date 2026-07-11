@@ -158,3 +158,25 @@ class RosterEmbedBuilder:
             "Attaccanti",
             "⚽"
         )
+    
+    def build_search(
+        self
+    ):
+
+        embed = discord.Embed(
+
+            title="🔍 Cerca giocatore",
+
+            description="Seleziona un giocatore della tua rosa.",
+
+            color=discord.Color.blue()
+
+        )
+
+        embed.set_footer(
+
+            text="Calcyscord.Manager • Rosa"
+
+        )
+
+        return embed

@@ -1,15 +1,14 @@
 import discord
 
-from ui.player.player_embed import PlayerEmbedBuilder
+from ui.contract.contract_embed import ContractEmbedBuilder
 
-from ui.player.player_buttons import (
-    ContractButton,
-    StatisticsButton,
+from ui.contract.contract_buttons import (
+    RenewButton,
     ClubButton
 )
 
 
-class PlayerView(discord.ui.View):
+class ContractView(discord.ui.View):
 
     def __init__(
         self,
@@ -34,33 +33,31 @@ class PlayerView(discord.ui.View):
 
         self.player = player
 
-        self.player_embed_builder = PlayerEmbedBuilder()
+        self.contract_embed_builder = ContractEmbedBuilder()
 
         self.message = None
 
         self.add_item(
-            ContractButton(self)
-        )
-
-        self.add_item(
-            StatisticsButton(self)
+            RenewButton(self)
         )
 
         self.add_item(
             ClubButton(self)
         )
 
-    async def show_player(
+    async def show_contract(
         self,
         interaction: discord.Interaction
     ):
-
-        embed = self.player_embed_builder.build(
+        
+        
+        embed = self.contract_embed_builder.build(
 
             self.player
 
         )
-
+        
+        
         await interaction.response.edit_message(
 
             embed=embed,
@@ -77,7 +74,7 @@ class PlayerView(discord.ui.View):
     ):
 
         from ui.club.club_view import ClubView
-        
+
         embed = self.club_embed_builder.build(
 
             self.data
@@ -105,57 +102,3 @@ class PlayerView(discord.ui.View):
         )
 
         view.message = await interaction.original_response()
-
-    async def show_contract(
-        self,
-        interaction: discord.Interaction
-    ):
-        
-        from ui.contract.contract_view import ContractView
-
-        view = ContractView(
-
-            self.club_service,
-
-            self.club_embed_builder,
-
-            self.roster_embed_builder,
-
-            self.data,
-
-            self.player
-
-        )
-
-        await view.show_contract(
-
-            interaction
-
-        )
-
-    async def show_statistics(
-        self,
-        interaction: discord.Interaction
-    ):
-
-        from ui.statistics.statistics_view import StatisticsView
-
-        view = StatisticsView(
-
-            self.club_service,
-
-            self.club_embed_builder,
-
-            self.roster_embed_builder,
-
-            self.data,
-
-            self.player
-
-        )
-
-        await view.show_statistics(
-
-            interaction
-
-        )

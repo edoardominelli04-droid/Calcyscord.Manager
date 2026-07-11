@@ -2,10 +2,10 @@ import discord
 
 
 # ==========================================================
-# CONTRATTO
+# RINNOVA
 # ==========================================================
 
-class ContractButton(discord.ui.Button):
+class RenewButton(discord.ui.Button):
 
     def __init__(
         self,
@@ -16,46 +16,9 @@ class ContractButton(discord.ui.Button):
 
         super().__init__(
 
-            label="Contratto",
+            label="Rinnova",
 
-            emoji="📜",
-
-            style=discord.ButtonStyle.primary,
-
-            row=0
-
-        )
-
-    async def callback(
-        self,
-        interaction: discord.Interaction
-    ):
-        
-        await self.view_data.show_contract(
-
-            interaction
-
-        )
-
-
-# ==========================================================
-# STATISTICHE
-# ==========================================================
-
-class StatisticsButton(discord.ui.Button):
-
-    def __init__(
-        self,
-        view
-    ):
-
-        self.view_data = view
-
-        super().__init__(
-
-            label="Statistiche",
-
-            emoji="📊",
+            emoji="✍️",
 
             style=discord.ButtonStyle.primary,
 
@@ -68,9 +31,11 @@ class StatisticsButton(discord.ui.Button):
         interaction: discord.Interaction
     ):
 
-        await self.view_data.show_statistics(
+        await interaction.response.send_message(
 
-            interaction
+            "🚧 Sistema rinnovi in sviluppo.",
+
+            ephemeral=True
 
         )
 

@@ -171,11 +171,9 @@ class SearchPlayerButton(discord.ui.Button):
         interaction: discord.Interaction
     ):
 
-        await interaction.response.send_message(
+        await self.view_data.show_search(
 
-            "🚧 Ricerca giocatore in sviluppo.",
-
-            ephemeral=True
+            interaction
 
         )
 
