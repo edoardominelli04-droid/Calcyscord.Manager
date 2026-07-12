@@ -96,3 +96,100 @@ class ContractService:
         self.save_all(contracts)
 
         return contract
+    
+    def create_transfer_contract(
+        self,
+        player,
+        manager_id,
+        transfer_fee
+    ):
+
+        contracts = self.get_all()
+
+        current = self.get_by_player(
+
+            player["id"]
+
+        )
+
+        if current is not None:
+
+            current["status"] = "expired"
+
+        market_value = player.get(
+
+            "market_value",
+
+            0
+
+        ) or 0
+
+        salary = max(
+
+            50000,
+
+            int(market_value * 0.08)
+
+        )
+
+        current_year = datetime.now().year
+
+        current_datetime = datetime.now().isoformat()
+
+        contract = {
+
+            "id": len(contracts) + 1,
+
+            "player_id": player["id"],
+
+            "manager_id": manager_id,
+
+            "type": "professional",
+
+            "is_loan": False,
+
+            "signed_at": current_datetime,
+
+            "expires_at": None,
+
+            "start_season": current_year,
+
+            "end_season": current_year + self.DEFAULT_DURATION,
+
+            "salary": salary,
+
+            "transfer_fee": transfer_fee,
+
+            "release_clause": None,
+
+            "origin_club_id": player["club_id"],
+
+            "contract_version": (
+
+                current["contract_version"] + 1
+
+                if current else 1
+
+            ),
+
+            "contract_notes": None,
+
+            "renewable": True,
+
+            "status": "active"
+
+        }
+
+        contracts.append(
+
+            contract
+
+        )
+
+        self.save_all(
+
+            contracts
+
+        )
+
+        return contract

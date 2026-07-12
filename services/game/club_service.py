@@ -2,6 +2,7 @@ from services.database_manager import DatabaseManager
 from services.game.manager_service import ManagerService
 from services.game.finance_service import FinanceService
 from services.game.squad_service import SquadService
+from datetime import datetime
 
 
 class ClubService:
@@ -195,3 +196,145 @@ class ClubService:
                 return True
 
         return False
+    
+    # ==========================================================
+    # GESTIONE CLUB
+    # ==========================================================
+
+    def get_club_owner(
+        self,
+        club_id
+    ):
+
+        ownership = self.db.get_club_ownership()
+
+        for record in ownership:
+
+            if record["club_id"] != club_id:
+                continue
+
+            if record["manager_id"] is None:
+
+                return None
+
+            return self.db.get_manager_by_id(
+
+                record["manager_id"]
+
+            )
+
+        return None
+
+    def is_bot_controlled(
+        self,
+        club_id
+    ):
+
+        return self.get_club_owner(
+
+            club_id
+
+        ) is None
+
+    def assign_club_to_manager(
+        self,
+        club_id,
+        manager_id
+    ):
+
+        ownership = self.db.get_club_ownership()
+
+        for record in ownership:
+
+            if record["club_id"] == club_id:
+
+                if record["manager_id"] != manager_id:
+
+                    record["last_manager_id"] = record["manager_id"]
+
+                record["manager_id"] = manager_id
+
+                record["assigned_at"] = datetime.utcnow().isoformat()
+
+                self.db.save_club_ownership(
+
+                    ownership
+
+                )
+
+                return
+
+    def release_club(
+        self,
+        club_id
+    ):
+
+        ownership = self.db.get_club_ownership()
+
+        for record in ownership:
+
+            if record["club_id"] == club_id:
+
+                record["last_manager_id"] = record["manager_id"]
+                
+                record["manager_id"] = None
+
+                record["assigned_at"] = None
+
+                self.db.save_club_ownership(
+
+                    ownership
+
+                )
+
+                return
+
+    def initialize_club_ownership(
+        self
+    ):
+
+        clubs = self.db.get_clubs()
+
+        ownership = self.db.get_club_ownership()
+
+        existing = {
+
+            record["club_id"]
+
+            for record in ownership
+
+        }
+
+        changed = False
+
+        for club in clubs:
+
+            if club["id"] in existing:
+
+                continue
+
+            ownership.append(
+
+                {
+
+                    "club_id": club["id"],
+
+                    "manager_id": None,
+
+                    "assigned_at": None,
+
+                    "last_manager_id": None
+
+                }
+
+            )
+
+            changed = True
+
+        if changed:
+
+            self.db.save_club_ownership(
+
+                ownership
+
+            )

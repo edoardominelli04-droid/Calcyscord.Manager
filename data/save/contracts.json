@@ -587,5 +587,43 @@
         "contract_notes": null,
         "renewable": true,
         "status": "active"
+    },
+    {
+        "id": 32,
+        "player_id": 11651,
+        "manager_id": 4,
+        "type": "professional",
+        "is_loan": false,
+        "signed_at": "2026-07-12T13:56:43.142786",
+        "expires_at": null,
+        "start_season": 2026,
+        "end_season": 2029,
+        "salary": 50000,
+        "transfer_fee": 350000,
+        "release_clause": null,
+        "origin_club_id": 179,
+        "contract_version": 1,
+        "contract_notes": null,
+        "renewable": true,
+        "status": "active"
+    },
+    {
+        "id": 33,
+        "player_id": 617,
+        "manager_id": 4,
+        "type": "professional",
+        "is_loan": false,
+        "signed_at": "2026-07-12T15:36:05.371935",
+        "expires_at": null,
+        "start_season": 2026,
+        "end_season": 2029,
+        "salary": 50000,
+        "transfer_fee": 400000,
+        "release_clause": null,
+        "origin_club_id": 101,
+        "contract_version": 1,
+        "contract_notes": null,
+        "renewable": true,
+        "status": "active"
     }
 ]

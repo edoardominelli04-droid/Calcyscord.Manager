@@ -28,58 +28,61 @@
                 "captain": false,
                 "vice_captain": false
             },
-            "DM1": {
-                "player_id": 7632,
+            "LM": {
+                "player_id": 11651,
                 "captain": false,
                 "vice_captain": false
             },
-            "DM2": {
-                "player_id": 9185,
+            "CM1": {
+                "player_id": 9865,
                 "captain": false,
                 "vice_captain": false
             },
-            "LW": {
-                "player_id": 5085,
-                "captain": false,
-                "vice_captain": false
-            },
-            "AM": {
+            "CM2": {
                 "player_id": 9142,
                 "captain": false,
                 "vice_captain": false
             },
-            "RW": {
-                "player_id": 8139,
+            "RM": {
+                "player_id": 15038,
                 "captain": false,
                 "vice_captain": false
             },
-            "ST": {
+            "ST1": {
                 "player_id": 3746,
+                "captain": false,
+                "vice_captain": false
+            },
+            "ST2": {
+                "player_id": 5859,
                 "captain": false,
                 "vice_captain": false
             }
         },
         "bench": [
-            5859,
-            7251,
-            8932,
-            9632,
-            9865,
             10117,
+            13574,
+            8455,
+            12807,
             10128,
             10143,
-            10474,
-            11734,
-            12807,
-            13574,
-            13664,
+            9632,
+            8139,
+            7632,
             14033,
-            15038,
+            7251,
             15955,
-            12670,
-            8455,
+            11734,
+            5085,
+            13664,
+            9185,
+            8932,
+            13284,
+            617,
+            10474,
+            880,
             2034,
-            880
+            12670
         ]
     }
 ]

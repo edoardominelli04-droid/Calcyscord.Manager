@@ -129,6 +129,12 @@ class MarketBuyView(discord.ui.View):
 
         )
 
+        if result["success"]:
+
+            self.data = self.club_service.get_manager_club(
+                interaction.user.id
+        )
+
         await interaction.response.send_message(
 
             result["message"],

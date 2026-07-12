@@ -425,6 +425,217 @@ class FormationService:
         return formation
 
     # ==========================================================
+    # SINCRONIZZAZIONE FORMAZIONE
+    # ==========================================================
+
+    def refresh_formation(
+        self,
+        manager_id
+    ):
+
+        formation = self.get_manager_formation(
+            manager_id
+        )
+
+        if formation is None:
+
+            return self._error(
+                FORMATION_NOT_FOUND,
+                "Formazione non trovata."
+            )
+
+        squad = [
+
+            member
+
+            for member in self.db.get_squads()
+
+            if (
+                member["manager_id"] == manager_id
+                and member.get("status") == "active"
+            )
+
+        ]
+
+        squad_player_ids = {
+
+            member["player_id"]
+
+            for member in squad
+
+        }
+
+        slots = self.module_service.get_slots(
+
+            formation["module"]
+
+        )
+
+        refreshed_starting = {}
+
+        used_players = set()
+
+        # ==========================================
+        # CONSERVA I TITOLARI ANCORA IN ROSA
+        # ==========================================
+
+        for slot in slots:
+
+            current = formation["starting"].get(
+
+                slot
+
+            )
+
+            if current is None:
+
+                continue
+
+            player_id = current["player_id"]
+
+            if player_id not in squad_player_ids:
+
+                continue
+
+            if player_id in used_players:
+
+                continue
+
+            refreshed_starting[slot] = current
+
+            used_players.add(
+
+                player_id
+
+            )
+
+        # ==========================================
+        # RIEMPIE EVENTUALI SLOT VUOTI
+        # ==========================================
+
+        for slot in slots:
+
+            if slot in refreshed_starting:
+
+                continue
+
+            selected = None
+
+            family = SlotUtils.family(
+
+                slot
+
+            )
+
+            wanted_positions = POSITION_RULES.get(
+
+                family,
+
+                []
+
+            )
+
+            # Prima cerca il sottoruolo ideale
+
+            for player_id in squad_player_ids:
+
+                if player_id in used_players:
+
+                    continue
+
+                player = self.db.get_player_by_id(
+
+                    player_id
+
+                )
+
+                if player is None:
+
+                    continue
+
+                if player.get("sub_position") in wanted_positions:
+
+                    selected = player
+
+                    break
+
+            # Fallback sul ruolo principale
+
+            if selected is None:
+
+                category = SlotUtils.department(
+
+                    slot
+
+                )
+
+                for player_id in squad_player_ids:
+
+                    if player_id in used_players:
+
+                        continue
+
+                    player = self.db.get_player_by_id(
+
+                        player_id
+
+                    )
+
+                    if player is None:
+
+                        continue
+
+                    if player.get("position") == category:
+
+                        selected = player
+
+                        break
+
+            if selected is None:
+
+                continue
+
+            refreshed_starting[slot] = {
+
+                "player_id": selected["id"],
+
+                "captain": False,
+
+                "vice_captain": False
+
+            }
+
+            used_players.add(
+
+                selected["id"]
+
+            )
+
+        # ==========================================
+        # RICOSTRUISCE LA PANCHINA
+        # ==========================================
+
+        refreshed_bench = [
+
+            player_id
+
+            for player_id in squad_player_ids
+
+            if player_id not in used_players
+
+        ]
+
+        formation["starting"] = refreshed_starting
+
+        formation["bench"] = refreshed_bench
+
+        return self._save_formation(
+
+            formation
+
+        )
+    
+    # ==========================================================
     # STARTING
     # ==========================================================
 

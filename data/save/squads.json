@@ -215,5 +215,26 @@
         "player_id": 15955,
         "contract_id": 31,
         "status": "active"
+    },
+    {
+        "manager_id": 4,
+        "club_id": 2,
+        "player_id": 13284,
+        "contract_id": null,
+        "status": "active"
+    },
+    {
+        "manager_id": 4,
+        "club_id": 2,
+        "player_id": 11651,
+        "contract_id": 32,
+        "status": "active"
+    },
+    {
+        "manager_id": 4,
+        "club_id": 2,
+        "player_id": 617,
+        "contract_id": 33,
+        "status": "active"
     }
 ]

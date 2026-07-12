@@ -36,6 +36,7 @@ class ManagerService:
             "username": username,
 
             "club_id": None,
+            "is_bot": False,
 
             "created_at": datetime.utcnow().isoformat(),
 

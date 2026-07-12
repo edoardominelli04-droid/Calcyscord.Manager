@@ -2,6 +2,7 @@ from services.database_manager import DatabaseManager
 from services.game.finance_service import FinanceService
 from services.game.club_service import ClubService
 from services.game.bot_negotiation_service import BotNegotiationService
+from services.game.transfer_service import TransferService
 
 
 class MarketService:
@@ -28,6 +29,8 @@ class MarketService:
         self.club_service = ClubService()
 
         self.bot_negotiation_service = BotNegotiationService()
+
+        self.transfer_service = TransferService()
 
     # ==========================================================
     # ACQUISTO
@@ -148,9 +151,9 @@ class MarketService:
         # CLUB GESTITO DAL BOT
         # ==========================================
 
-        if owner["is_bot"]:
+        if owner["manager"] is None:
 
-            result = self.bot_negotiation_service.evaluate_offer(
+            negotiation = self.bot_negotiation_service.evaluate_offer(
 
                 player,
 
@@ -158,13 +161,27 @@ class MarketService:
 
             )
 
-            return {
+            if not negotiation["accepted"]:
 
-                "success": result["accepted"],
+                return {
 
-                "message": result["message"]
+                    "success": False,
 
-            }
+                    "message": negotiation["message"]
+
+                }
+
+            return self.transfer_service.execute_transfer(
+
+                buyer_manager_id,
+
+                None,
+
+                player_id,
+
+                amount
+
+            )
 
         # ==========================================
         # CLUB GESTITO DA UN MANAGER

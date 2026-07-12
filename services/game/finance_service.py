@@ -66,3 +66,66 @@ class FinanceService:
                 break
 
         self.save_all(finances)
+
+    # ==========================================================
+    # TRASFERIMENTI
+    # ==========================================================
+
+    def transfer_money(
+        self,
+        buyer_manager_id,
+        seller_manager_id,
+        amount
+    ):
+
+        buyer = self.get_finance(
+
+            buyer_manager_id
+
+        )
+
+        if buyer is None:
+
+            raise ValueError(
+
+                "Finanze acquirente non trovate."
+
+            )
+
+        buyer["balance"] -= amount
+
+        buyer["transfer_budget"] -= amount
+
+        buyer["expense_total"] += amount
+
+        self.save(
+
+            buyer
+
+        )
+
+        if seller_manager_id is None:
+
+            return
+
+        seller = self.get_finance(
+
+            seller_manager_id
+
+        )
+
+        if seller is None:
+
+            return
+
+        seller["balance"] += amount
+
+        seller["transfer_budget"] += amount
+
+        seller["income_total"] += amount
+
+        self.save(
+
+            seller
+
+        )
