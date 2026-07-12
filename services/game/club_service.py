@@ -176,3 +176,22 @@ class ClubService:
             "is_bot": manager is None
 
         }
+    
+    def is_player_owned_by_manager(
+        self,
+        manager_id,
+        player_id
+    ):
+
+        squad = self.db.get_squads()
+
+        for member in squad:
+
+            if (
+                member["manager_id"] == manager_id
+                and member["player_id"] == player_id
+            ):
+
+                return True
+
+        return False

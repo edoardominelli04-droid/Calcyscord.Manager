@@ -167,6 +167,33 @@ class MarketPlayerView(discord.ui.View):
 
         )
 
+    async def show_buy(
+        self,
+        interaction: discord.Interaction
+    ):
+
+        from ui.market_buy.market_buy_view import MarketBuyView
+
+        view = MarketBuyView(
+
+            self.club_service,
+
+            self.club_embed_builder,
+
+            self.roster_embed_builder,
+
+            self.data,
+
+            self.player
+
+        )
+
+        await view.show_buy(
+
+            interaction
+
+        )
+    
     async def show_owner(
         self,
         interaction: discord.Interaction

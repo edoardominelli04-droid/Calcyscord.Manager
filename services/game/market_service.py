@@ -1,0 +1,233 @@
+from services.database_manager import DatabaseManager
+from services.game.finance_service import FinanceService
+from services.game.club_service import ClubService
+from services.game.bot_negotiation_service import BotNegotiationService
+
+
+class MarketService:
+    """
+    Gestisce tutte le operazioni di mercato di Calcyscord.Manager.
+
+    - offerte di acquisto
+    - prestiti
+    - vendite al bot
+    - trasferimenti tra manager
+    - aste
+    - controlli finestre di mercato
+    - negoziazione automatica dei club gestiti dal sistema
+    """
+
+    def __init__(
+        self
+    ):
+
+        self.db = DatabaseManager()
+
+        self.finance_service = FinanceService()
+
+        self.club_service = ClubService()
+
+        self.bot_negotiation_service = BotNegotiationService()
+
+    # ==========================================================
+    # ACQUISTO
+    # ==========================================================
+
+    def submit_offer(
+        self,
+        buyer_manager_id,
+        player_id,
+        amount
+    ):
+
+        # ==========================================
+        # OFFERTA VALIDA
+        # ==========================================
+
+        if amount <= 0:
+
+            return {
+
+                "success": False,
+
+                "message": "❌ L'offerta deve essere maggiore di zero."
+
+            }
+
+        # ==========================================
+        # GIOCATORE ESISTE
+        # ==========================================
+
+        player = self.db.get_player_by_id(
+
+            player_id
+
+        )
+
+        if player is None:
+
+            return {
+
+                "success": False,
+
+                "message": "❌ Giocatore non trovato."
+
+            }
+
+        # ==========================================
+        # GIOCATORE GIÀ IN ROSA
+        # ==========================================
+
+        if self.club_service.is_player_owned_by_manager(
+
+            buyer_manager_id,
+
+            player_id
+
+        ):
+
+            return {
+
+                "success": False,
+
+                "message": "❌ Il giocatore appartiene già alla tua rosa."
+
+            }
+
+        # ==========================================
+        # BUDGET
+        # ==========================================
+
+        finance = self.finance_service.get_finance(
+
+            buyer_manager_id
+
+        )
+
+        if finance is None:
+
+            return {
+
+                "success": False,
+
+                "message": "❌ Dati finanziari non trovati."
+
+            }
+
+        if amount > finance["transfer_budget"]:
+
+            return {
+
+                "success": False,
+
+                "message": "❌ Budget trasferimenti insufficiente."
+
+            }
+        
+        # ==========================================
+        # PROPRIETARIO
+        # ==========================================
+
+        owner = self.club_service.get_player_owner(
+
+            player_id
+
+        )
+
+        if owner is None:
+
+            return {
+
+                "success": False,
+
+                "message": "❌ Impossibile determinare il proprietario."
+
+            }
+
+        # ==========================================
+        # CLUB GESTITO DAL BOT
+        # ==========================================
+
+        if owner["is_bot"]:
+
+            result = self.bot_negotiation_service.evaluate_offer(
+
+                player,
+
+                amount
+
+            )
+
+            return {
+
+                "success": result["accepted"],
+
+                "message": result["message"]
+
+            }
+
+        # ==========================================
+        # CLUB GESTITO DA UN MANAGER
+        # ==========================================
+
+        return {
+
+            "success": True,
+
+            "message": "📨 Offerta inviata al manager proprietario."
+
+        }
+    
+    # ==========================================================
+    # PRESTITO
+    # ==========================================================
+
+    def submit_loan(
+        self,
+        buyer_manager_id,
+        player_id
+    ):
+
+        return {
+
+            "success": True,
+
+            "message": "🚧 Logica prestiti in sviluppo."
+
+        }
+
+    # ==========================================================
+    # VENDITA AL BOT
+    # ==========================================================
+
+    def sell_to_bot(
+        self,
+        manager_id,
+        player_id
+    ):
+
+        return {
+
+            "success": True,
+
+            "message": "🚧 Vendita al bot in sviluppo."
+
+        }
+
+    # ==========================================================
+    # MESSA IN VENDITA
+    # ==========================================================
+
+    def list_for_transfer(
+        self,
+        manager_id,
+        player_id
+    ):
+
+        return {
+
+            "success": True,
+
+            "message": "🚧 Messa sul mercato in sviluppo."
+
+        }
