@@ -41,10 +41,22 @@ class ClubSelectionService:
         manager["club_id"] = club_id
         self.manager_service.save(manager)
 
-        self.squad_service.create_initial_squad(
-            manager["id"],
-            club_id
-        )
+        try:
+
+            self.squad_service.create_initial_squad(
+
+                manager["id"],
+                club_id
+
+            )
+
+        except Exception:
+
+            import traceback
+  
+            traceback.print_exc()
+
+            raise
 
         try:
             self.formation_service.create_initial_formation(

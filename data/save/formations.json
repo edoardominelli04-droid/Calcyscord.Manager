@@ -84,5 +84,168 @@
             2034,
             12670
         ]
+    },
+    {
+        "manager_id": 5,
+        "module": "4-3-3",
+        "starting": {
+            "GK": {
+                "player_id": 790,
+                "captain": false,
+                "vice_captain": false
+            },
+            "LB": {
+                "player_id": 2056,
+                "captain": false,
+                "vice_captain": false
+            },
+            "CB1": {
+                "player_id": 235,
+                "captain": false,
+                "vice_captain": false
+            },
+            "CB2": {
+                "player_id": 385,
+                "captain": false,
+                "vice_captain": false
+            },
+            "RB": {
+                "player_id": 41,
+                "captain": false,
+                "vice_captain": false
+            },
+            "CM1": {
+                "player_id": 154,
+                "captain": false,
+                "vice_captain": false
+            },
+            "CM2": {
+                "player_id": 1722,
+                "captain": false,
+                "vice_captain": false
+            },
+            "CM3": {
+                "player_id": 2336,
+                "captain": false,
+                "vice_captain": false
+            },
+            "LW": {
+                "player_id": 5784,
+                "captain": false,
+                "vice_captain": false
+            },
+            "ST": {
+                "player_id": 1021,
+                "captain": false,
+                "vice_captain": false
+            },
+            "RW": {
+                "player_id": 6540,
+                "captain": false,
+                "vice_captain": false
+            }
+        },
+        "bench": [
+            925,
+            983,
+            1243,
+            1449,
+            1572,
+            1647,
+            1727,
+            1843,
+            2276,
+            2298,
+            2894,
+            2952,
+            3114,
+            3666,
+            3847,
+            4160,
+            4340,
+            4418,
+            4490,
+            4883,
+            4931,
+            5191,
+            5256,
+            5715,
+            5761,
+            5782,
+            5805,
+            5924,
+            6140,
+            6504,
+            6509,
+            6541,
+            6542,
+            6544,
+            6553,
+            6578,
+            6892,
+            7042,
+            7120,
+            7135,
+            7436,
+            7465,
+            7599,
+            7600,
+            7601,
+            7772,
+            8005,
+            8050,
+            8097,
+            8340,
+            8383,
+            8448,
+            8737,
+            8834,
+            8915,
+            9004,
+            9181,
+            9356,
+            9446,
+            9500,
+            9736,
+            9900,
+            9921,
+            10034,
+            10182,
+            10395,
+            10776,
+            11369,
+            11541,
+            11542,
+            11631,
+            11655,
+            11848,
+            11929,
+            12260,
+            12261,
+            12273,
+            12885,
+            13069,
+            13223,
+            13357,
+            13451,
+            13677,
+            14045,
+            14046,
+            14093,
+            14441,
+            14485,
+            14724,
+            14725,
+            14726,
+            14727,
+            14790,
+            14808,
+            15031,
+            15137,
+            15157,
+            15409,
+            15410,
+            15522
+        ]
     }
 ]

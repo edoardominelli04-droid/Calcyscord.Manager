@@ -1,5 +1,5 @@
+import math
 from datetime import datetime
-
 from services.database_manager import DatabaseManager
 
 
@@ -33,11 +33,22 @@ class ContractService:
         if self.get_by_player(player["id"]):
             return None
 
-        market_value = player.get("market_value", 0) or 0
+        market_value = player.get("market_value", 0)
+
+        if market_value is None:
+
+            market_value = 0
+
+        elif isinstance(market_value, float) and math.isnan(market_value):
+
+            market_value = 0
 
         salary = max(
+
             50000,
+
             int(market_value * 0.08)
+
         )
 
         current_year = datetime.now().year

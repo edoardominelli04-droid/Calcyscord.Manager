@@ -3,6 +3,7 @@ from services.game.finance_service import FinanceService
 from services.game.club_service import ClubService
 from services.game.bot_negotiation_service import BotNegotiationService
 from services.game.transfer_service import TransferService
+from services.game.transfer_request_service import TransferRequestService
 
 
 class MarketService:
@@ -31,6 +32,8 @@ class MarketService:
         self.bot_negotiation_service = BotNegotiationService()
 
         self.transfer_service = TransferService()
+
+        self.transfer_request_service = TransferRequestService()
 
     # ==========================================================
     # ACQUISTO
@@ -187,11 +190,29 @@ class MarketService:
         # CLUB GESTITO DA UN MANAGER
         # ==========================================
 
+        request = self.transfer_request_service.create_request(
+
+            buyer_manager_id,
+
+            owner["manager"]["id"],
+
+            player_id,
+
+            amount
+
+        )
+
         return {
 
             "success": True,
 
-            "message": "📨 Offerta inviata al manager proprietario."
+            "message": (
+
+                "📨 Offerta inviata al manager proprietario.\n"
+
+                f"Richiesta #{request['id']} creata."
+
+            )
 
         }
     

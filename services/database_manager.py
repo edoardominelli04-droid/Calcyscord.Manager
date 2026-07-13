@@ -109,6 +109,19 @@ class DatabaseManager:
 
     def save_contracts(self, data):
         self._save_json(self.save_path, "contracts.json", data)
+
+    def get_transfer_requests(self):
+        return self._load_json(
+            self.save_path,
+            "transfer_requests.json"
+        )
+
+    def save_transfer_requests(self, data):
+        self._save_json(
+            self.save_path,
+            "transfer_requests.json",
+            data
+        )
     
     def get_formations(self):
         return self._load_json(

@@ -148,6 +148,42 @@ class TransfersButton(discord.ui.Button):
 
         )
 
+# ==========================================================
+# OFFERTE
+# ==========================================================
+
+class OffersButton(discord.ui.Button):
+
+    def __init__(
+        self,
+        view
+    ):
+
+        self.view_data = view
+
+        super().__init__(
+
+            label="Offerte",
+
+            emoji="📨",
+
+            style=discord.ButtonStyle.secondary,
+
+            row=1
+
+        )
+
+    async def callback(
+        self,
+        interaction: discord.Interaction
+    ):
+
+        await self.view_data.show_transfer_requests(
+
+            interaction
+
+        )
+
 
 # ==========================================================
 # CLUB
