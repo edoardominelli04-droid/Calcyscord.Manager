@@ -31,7 +31,14 @@ class ManagerService:
             return None
 
         manager = {
-            "id": len(managers) + 1,
+            "id": max(
+                (
+                    manager["id"]
+                    for manager in managers
+                ),
+                default=0
+            ) + 1,
+            
             "discord_id": str(discord_id),
             "username": username,
 

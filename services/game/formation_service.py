@@ -388,43 +388,6 @@ class FormationService:
         }
 
     # ==========================================================
-    # CREAZIONE FORMAZIONE
-    # ==========================================================
-
-    def create_initial_formation(
-        self,
-        manager_id,
-        module_name=None
-    ):
-
-        if self.get_manager_formation(manager_id):
-            raise ValueError(
-                "La formazione esiste già."
-            )
-
-        if module_name is None:
-            module_name = (
-                self.module_service.DEFAULT_MODULE
-            )
-
-        formation = self._build_formation(
-            manager_id,
-            module_name
-        )
-
-        formations = self.get_all()
-
-        formations.append(
-            formation
-        )
-
-        self.save_all(
-            formations
-        )
-
-        return formation
-
-    # ==========================================================
     # SINCRONIZZAZIONE FORMAZIONE
     # ==========================================================
 

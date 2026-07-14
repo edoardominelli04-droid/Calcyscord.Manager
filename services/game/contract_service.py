@@ -55,7 +55,13 @@ class ContractService:
         current_datetime = datetime.now().isoformat()
 
         contract = {
-            "id": len(contracts) + 1,
+            "id": max(
+                (
+                    contract["id"]
+                    for contract in contracts
+                ),
+                default=0
+            ) + 1,
 
             "player_id": player["id"],
             "manager_id": manager_id,
@@ -127,13 +133,15 @@ class ContractService:
 
             current["status"] = "expired"
 
-        market_value = player.get(
+        market_value = player.get("market_value", 0)
 
-            "market_value",
+        if market_value is None:
 
-            0
+            market_value = 0
 
-        ) or 0
+        elif isinstance(market_value, float) and math.isnan(market_value):
+
+            market_value = 0
 
         salary = max(
 
@@ -149,7 +157,13 @@ class ContractService:
 
         contract = {
 
-            "id": len(contracts) + 1,
+            "id": max(
+                (
+                    contract["id"]
+                    for contract in contracts
+                ),
+                default=0
+            ) + 1,
 
             "player_id": player["id"],
 

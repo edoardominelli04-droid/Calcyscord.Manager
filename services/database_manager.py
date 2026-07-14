@@ -6,6 +6,7 @@ class DatabaseManager:
     """Gestisce la lettura e la scrittura dei database JSON."""
 
     def __init__(self):
+
         base_path = Path(__file__).resolve().parent.parent / "data"
 
         self.datasets_path = base_path / "datasets"
@@ -16,25 +17,111 @@ class DatabaseManager:
     # METODI GENERICI
     # ==========================================================
 
+    def _sanitize_json_data(self, value):
+        """
+        Converte automaticamente valori non validi
+        (NaN, Infinity, -Infinity) in None.
+        """
+
+        if isinstance(value, float):
+
+            if value != value:
+                return None
+
+            if value in (
+                float("inf"),
+                float("-inf")
+            ):
+                return None
+
+        if isinstance(value, list):
+
+            return [
+
+                self._sanitize_json_data(item)
+
+                for item in value
+
+            ]
+
+        if isinstance(value, dict):
+
+            return {
+
+                key: self._sanitize_json_data(item)
+
+                for key, item in value.items()
+
+            }
+
+        return value
+
     def _load_json(self, folder, filename):
+
         file_path = folder / filename
 
         if not file_path.exists():
             return []
 
-        with open(file_path, "r", encoding="utf-8") as file:
+        with open(
+            file_path,
+            "r",
+            encoding="utf-8"
+        ) as file:
+
             content = file.read().strip()
 
         if not content:
             return []
 
-        return json.loads(content)
+        data = json.loads(
+
+            content,
+
+            parse_constant=lambda value: None
+
+        )
+
+        return self._sanitize_json_data(
+
+            data
+
+        )
 
     def _save_json(self, folder, filename, data):
+
+        folder.mkdir(
+            parents=True,
+            exist_ok=True
+        )
+
         file_path = folder / filename
 
-        with open(file_path, "w", encoding="utf-8") as file:
-            json.dump(data, file, ensure_ascii=False, indent=4)
+        clean_data = self._sanitize_json_data(
+
+            data
+
+        )
+
+        with open(
+            file_path,
+            "w",
+            encoding="utf-8"
+        ) as file:
+
+            json.dump(
+
+                clean_data,
+
+                file,
+
+                ensure_ascii=False,
+
+                indent=4,
+
+                allow_nan=False
+
+            )
 
     # ==========================================================
     # DATASETS
@@ -122,7 +209,7 @@ class DatabaseManager:
             "transfer_requests.json",
             data
         )
-    
+
     def get_formations(self):
         return self._load_json(
             self.save_path,
@@ -141,13 +228,23 @@ class DatabaseManager:
     # ==========================================================
 
     def get_competitions_config(self):
-        return self._load_json(self.config_path, "competitions.json")
+        return self._load_json(
+            self.config_path,
+            "competitions.json"
+        )
 
     def get_config_file(self, filename):
-        return self._load_json(self.config_path, filename)
+        return self._load_json(
+            self.config_path,
+            filename
+        )
 
     def save_config_file(self, filename, data):
-        self._save_json(self.config_path, filename, data)
+        self._save_json(
+            self.config_path,
+            filename,
+            data
+        )
 
     # ==========================================================
     # FINDERS
@@ -162,7 +259,7 @@ class DatabaseManager:
             ),
             None
         )
-    
+
     def get_manager_by_id(self, manager_id):
         return next(
             (

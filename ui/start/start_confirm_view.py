@@ -73,9 +73,13 @@ class StartConfirmView(discord.ui.View):
         interaction: discord.Interaction
     ):
 
+        await interaction.response.defer(
+            ephemeral=True
+        )
+
         try:
 
-            manager, club = (
+            _, club = (
 
                 self.parent_view.start_service.confirm_club(
 
@@ -89,11 +93,13 @@ class StartConfirmView(discord.ui.View):
 
         except ValueError as e:
 
-            await interaction.response.send_message(
+            await interaction.edit_original_response(
 
-                f"❌ {e}",
+                content=f"❌ {e}",
 
-                ephemeral=True
+                embed=None,
+
+                view=None
 
             )
 
@@ -105,7 +111,7 @@ class StartConfirmView(discord.ui.View):
 
         )
 
-        await interaction.response.edit_message(
+        await interaction.edit_original_response(
 
             embed=embed,
 

@@ -1,91 +1,5 @@
 [
     {
-        "manager_id": 4,
-        "module": "4-4-2",
-        "starting": {
-            "GK": {
-                "player_id": 13714,
-                "captain": false,
-                "vice_captain": false
-            },
-            "LB": {
-                "player_id": 14945,
-                "captain": false,
-                "vice_captain": false
-            },
-            "CB1": {
-                "player_id": 3277,
-                "captain": false,
-                "vice_captain": false
-            },
-            "CB2": {
-                "player_id": 12879,
-                "captain": true,
-                "vice_captain": false
-            },
-            "RB": {
-                "player_id": 7758,
-                "captain": false,
-                "vice_captain": false
-            },
-            "LM": {
-                "player_id": 11651,
-                "captain": false,
-                "vice_captain": false
-            },
-            "CM1": {
-                "player_id": 9865,
-                "captain": false,
-                "vice_captain": false
-            },
-            "CM2": {
-                "player_id": 9142,
-                "captain": false,
-                "vice_captain": false
-            },
-            "RM": {
-                "player_id": 15038,
-                "captain": false,
-                "vice_captain": false
-            },
-            "ST1": {
-                "player_id": 3746,
-                "captain": false,
-                "vice_captain": false
-            },
-            "ST2": {
-                "player_id": 5859,
-                "captain": false,
-                "vice_captain": false
-            }
-        },
-        "bench": [
-            10117,
-            13574,
-            8455,
-            12807,
-            10128,
-            10143,
-            9632,
-            8139,
-            7632,
-            14033,
-            7251,
-            15955,
-            11734,
-            5085,
-            13664,
-            9185,
-            8932,
-            13284,
-            617,
-            10474,
-            880,
-            2034,
-            12670
-        ]
-    },
-    {
         "manager_id": 5,
         "module": "4-3-3",
         "starting": {
@@ -246,6 +160,186 @@
             15409,
             15410,
             15522
+        ]
+    },
+    {
+        "manager_id": 6,
+        "module": "4-3-3",
+        "starting": {
+            "GK": {
+                "player_id": 616,
+                "captain": false,
+                "vice_captain": false
+            },
+            "LB": {
+                "player_id": 1938,
+                "captain": false,
+                "vice_captain": false
+            },
+            "CB1": {
+                "player_id": 2239,
+                "captain": false,
+                "vice_captain": false
+            },
+            "CB2": {
+                "player_id": 2851,
+                "captain": false,
+                "vice_captain": false
+            },
+            "RB": {
+                "player_id": 922,
+                "captain": false,
+                "vice_captain": false
+            },
+            "CM1": {
+                "player_id": 362,
+                "captain": false,
+                "vice_captain": false
+            },
+            "CM2": {
+                "player_id": 2353,
+                "captain": false,
+                "vice_captain": false
+            },
+            "CM3": {
+                "player_id": 3293,
+                "captain": false,
+                "vice_captain": false
+            },
+            "LW": {
+                "player_id": 6295,
+                "captain": false,
+                "vice_captain": false
+            },
+            "ST": {
+                "player_id": 1,
+                "captain": false,
+                "vice_captain": false
+            },
+            "RW": {
+                "player_id": 2775,
+                "captain": false,
+                "vice_captain": false
+            }
+        },
+        "bench": [
+            211,
+            404,
+            407,
+            821,
+            1286,
+            1524,
+            1816,
+            2210,
+            2634,
+            3017,
+            3018,
+            3032,
+            3411,
+            3649,
+            3796,
+            4139,
+            4193,
+            4237,
+            4238,
+            4257,
+            4517,
+            4562,
+            4888,
+            5009,
+            5041,
+            5042,
+            5043,
+            5324,
+            5463,
+            5693,
+            5704,
+            5769,
+            5770,
+            5771,
+            5772,
+            5773,
+            5790,
+            6062,
+            6196,
+            6293,
+            6527,
+            6557,
+            6558,
+            6559,
+            6611,
+            6643,
+            6660,
+            6698,
+            6712,
+            6831,
+            7282,
+            7417,
+            7562,
+            7563,
+            7564,
+            7828,
+            8220,
+            8287,
+            8391,
+            8433,
+            8436,
+            8488,
+            8661,
+            8903,
+            9002,
+            9247,
+            9402,
+            9412,
+            9413,
+            9416,
+            9498,
+            9499,
+            9501,
+            9503,
+            9957,
+            9959,
+            9989,
+            10345,
+            10356,
+            10373,
+            10374,
+            10375,
+            10452,
+            10460,
+            10566,
+            10882,
+            11163,
+            11214,
+            11286,
+            11338,
+            11362,
+            11365,
+            11510,
+            12096,
+            12098,
+            12174,
+            12250,
+            12308,
+            12392,
+            12409,
+            12415,
+            12612,
+            13662,
+            13709,
+            14122,
+            14184,
+            14317,
+            14587,
+            14610,
+            14710,
+            14711,
+            14712,
+            15051,
+            15086,
+            15281,
+            15408,
+            15692
         ]
     }
 ]

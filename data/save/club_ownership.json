@@ -1,20 +1,14 @@
 [
     {
-        "manager_id": 3,
-        "club_id": 1,
-        "created_at": "2026-07-06T21:15:00.355631",
-        "active": true
-    },
-    {
-        "manager_id": 4,
-        "club_id": 2,
-        "created_at": "2026-07-07T11:06:19.325153",
-        "active": true
-    },
-    {
         "manager_id": 5,
         "club_id": 173,
         "created_at": "2026-07-13T09:36:12.440361",
+        "active": true
+    },
+    {
+        "manager_id": 6,
+        "club_id": 152,
+        "created_at": "2026-07-14T21:34:51.393874",
         "active": true
     }
 ]

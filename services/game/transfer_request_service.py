@@ -55,7 +55,13 @@ class TransferRequestService:
 
         request = {
 
-            "id": len(requests) + 1,
+            "id": max(
+                (
+                    request["id"]
+                    for request in requests
+                ),
+                default=0
+            ) + 1,
 
             "buyer_manager_id": buyer_manager_id,
 

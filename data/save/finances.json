@@ -1,38 +1,14 @@
 [
     {
-        "manager_id": 1,
-        "balance": 50000000,
-        "transfer_budget": 50000000,
-        "salary_budget": 0,
-        "income_total": 0,
-        "expense_total": 0
-    },
-    {
-        "manager_id": 2,
-        "balance": 50000000,
-        "transfer_budget": 50000000,
-        "salary_budget": 0,
-        "income_total": 0,
-        "expense_total": 0
-    },
-    {
-        "manager_id": 3,
-        "balance": 50000000,
-        "transfer_budget": 50000000,
-        "salary_budget": 0,
-        "income_total": 0,
-        "expense_total": 0
-    },
-    {
-        "manager_id": 4,
-        "balance": 34250000,
-        "transfer_budget": 34250000,
-        "salary_budget": 0,
-        "income_total": 0,
-        "expense_total": 15750000
-    },
-    {
         "manager_id": 5,
+        "balance": 50000000,
+        "transfer_budget": 50000000,
+        "salary_budget": 0,
+        "income_total": 0,
+        "expense_total": 0
+    },
+    {
+        "manager_id": 6,
         "balance": 50000000,
         "transfer_budget": 50000000,
         "salary_budget": 0,
