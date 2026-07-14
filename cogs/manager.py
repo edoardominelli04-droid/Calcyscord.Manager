@@ -4,6 +4,7 @@ from discord.ext import commands
 from services.game.registration_service import RegistrationService
 from services.game.club_selection_service import ClubSelectionService
 from services.game.finance_service import FinanceService
+from ui.start.start_view import StartView
 
 
 class Manager(commands.Cog):
@@ -25,15 +26,36 @@ class Manager(commands.Cog):
 
         if created:
 
-            embed = discord.Embed(
-                title="🎉 Benvenuto in Calcyscord.Manager!",
-                description=(
-                    "Il tuo profilo manageriale è stato creato.\n\n"
-                    "Ora scegli il tuo club con:\n"
-                    "`!chooseclub <id_club>`"
-                ),
-                color=discord.Color.green()
-            )
+            try:
+
+                dm = await ctx.author.create_dm()
+
+                view = StartView(
+
+                    ctx.author.id
+
+                )
+
+                embed = view.embed_builder.build_welcome()
+
+                message = await dm.send(
+
+                    embed=embed,
+
+                    view=view
+
+                )
+
+                view.message = message
+
+            except discord.Forbidden:
+
+                await ctx.send(
+
+                    "❌ Non posso inviarti messaggi privati. "
+                    "Abilita i DM del server e riprova."
+
+                )
 
         else:
 
