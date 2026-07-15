@@ -12,6 +12,7 @@ class PlayerImporter:
         self.provider = TransfermarktProvider()
 
     def import_players(self):
+
         clubs = self.db.get_clubs()
         countries = self.db.get_countries()
 
@@ -29,26 +30,57 @@ class PlayerImporter:
         players_df = self.provider.get_players()
 
         players = []
+
         next_id = 1
 
         for _, row in players_df.iterrows():
+
             club_external_id = row["current_club_id"]
 
             if club_external_id not in enabled_club_ids:
                 continue
 
-            player = PlayerMapper.from_transfermarkt(row, next_id)
+            player = PlayerMapper.from_transfermarkt(
+                row,
+                next_id
+            )
 
             club = enabled_club_ids[club_external_id]
 
+            # ======================================================
+            # COLLEGAMENTI INTERNI
+            # ======================================================
+
             player["club_id"] = club["id"]
+
             player["competition_id"] = club["competition_id"]
 
-            country_name = CountryNormalizer.normalize(player.get("country"))
-            country_key = str(country_name).strip().lower()
-            player["nationality_id"] = country_by_name.get(country_key)
+            # ======================================================
+            # ULTIMA STAGIONE DISPONIBILE
+            # ======================================================
+
+            player["last_season"] = club.get(
+                "last_season"
+            )
+
+            # ======================================================
+            # NAZIONALITÀ
+            # ======================================================
+
+            country_name = CountryNormalizer.normalize(
+                player.get("country")
+            )
+
+            country_key = str(
+                country_name
+            ).strip().lower()
+
+            player["nationality_id"] = country_by_name.get(
+                country_key
+            )
 
             players.append(player)
+
             next_id += 1
 
         self.db.save_players(players)

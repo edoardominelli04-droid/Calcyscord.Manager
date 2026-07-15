@@ -38,11 +38,14 @@ class ManagerService:
                 ),
                 default=0
             ) + 1,
-            
+
             "discord_id": str(discord_id),
             "username": username,
 
             "club_id": None,
+
+            "onboarding_status": "club_selection",
+            
             "is_bot": False,
 
             "created_at": datetime.utcnow().isoformat(),

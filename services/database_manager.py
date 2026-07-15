@@ -223,6 +223,19 @@ class DatabaseManager:
             data
         )
 
+    def get_initial_squad_drafts(self):
+        return self._load_json(
+            self.save_path,
+            "initial_squad_drafts.json"
+        )
+
+    def save_initial_squad_drafts(self, data):
+        self._save_json(
+            self.save_path,
+            "initial_squad_drafts.json",
+            data
+        )
+
     # ==========================================================
     # CONFIG
     # ==========================================================

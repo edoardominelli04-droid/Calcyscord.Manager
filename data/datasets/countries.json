@@ -1741,19 +1741,5 @@
         "code": "ZW",
         "continent_id": null,
         "flag": "🇿🇼"
-    },
-    {
-        "id": 250,
-        "name": "Palestine",
-        "code": "PS",
-        "continent_id": null,
-        "flag": "🇵🇸"
-    },
-    {
-        "id": 251,
-        "name": "Bonaire",
-        "code": "BQ",
-        "continent_id": null,
-        "flag": "🇧🇶"
     }
 ]

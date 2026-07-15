@@ -3,6 +3,7 @@ from services.game.manager_service import ManagerService
 from services.game.club_ownership_service import ClubOwnershipService
 from services.game.squad_service import SquadService
 from services.game.formation_service import FormationService
+from services.game.initial_squad_service import InitialSquadService
 
 
 class ClubSelectionService:
@@ -14,6 +15,7 @@ class ClubSelectionService:
         self.ownership_service = ClubOwnershipService()
         self.squad_service = SquadService()
         self.formation_service = FormationService()
+        self.initial_squad_service = InitialSquadService()
 
     def choose_club(self, discord_id, club_id):
 
@@ -39,7 +41,18 @@ class ClubSelectionService:
         )
 
         manager["club_id"] = club_id
+
+        manager["onboarding_status"] = "initial_squad"
+
         self.manager_service.save(manager)
+
+        self.initial_squad_service.create_draft(
+
+            manager["id"],
+
+            club_id
+
+        )
 
         try:
 
