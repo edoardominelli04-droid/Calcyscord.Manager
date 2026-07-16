@@ -4,60 +4,61 @@ from services.database_manager import DatabaseManager
 
 
 class PlayerService:
-    """Gestisce la ricerca e il filtraggio dei giocatori."""
+    """Gestisce la ricerca dei giocatori appartenenti alla rosa attuale."""
 
     def __init__(self):
 
         self.db = DatabaseManager()
 
+        # ======================================================
+        # CACHE GIOCATORI
+        # ======================================================
+
+        self.players_by_id = {
+
+            player["id"]: player
+
+            for player in self.db.get_players()
+
+        }
+
+        # ======================================================
+        # CACHE ROSE
+        # ======================================================
+
+        self.rosters_by_club = {
+
+            roster["club_id"]: roster
+
+            for roster in self.db.get_current_rosters()
+
+        }
+
     # ==========================================================
-    # STAGIONE
+    # ROSA ATTUALE
     # ==========================================================
 
-    def get_latest_season(self):
-
-        clubs = self.db.get_clubs()
-
-        seasons = [
-
-            club["last_season"]
-
-            for club in clubs
-
-            if club.get("last_season") is not None
-
-        ]
-
-        if not seasons:
-
-            return None
-
-        return max(seasons)
-
-    # ==========================================================
-    # GIOCATORI ELEGGIBILI
-    # ==========================================================
-
-    def get_eligible_players(
+    def get_current_players(
         self,
         club_id
     ):
 
-        latest_season = self.get_latest_season()
+        roster = self.rosters_by_club.get(
+            club_id
+        )
 
-        players = self.db.get_players()
+        if roster is None:
+            return []
 
-        eligible = []
+        current_players = []
 
-        for player in players:
+        for player_id in roster["players"]:
 
-            if player.get("club_id") != club_id:
-                continue
+            player = self.players_by_id.get(
+                player_id
+            )
 
-            if player.get("last_season") != latest_season:
-                continue
-
-            if not player.get("active", True):
+            if player is None:
                 continue
 
             if player.get("status") != "available":
@@ -73,17 +74,21 @@ class PlayerService:
             ):
                 continue
 
-            market_value = player.get("market_value")
+            market_value = player.get(
+                "market_value"
+            )
 
-            if isinstance(market_value, float):
+            if (
+                isinstance(market_value, float)
+                and math.isnan(market_value)
+            ):
+                player["market_value"] = 0
 
-                if math.isnan(market_value):
+            current_players.append(
+                player
+            )
 
-                    player["market_value"] = 0
-
-            eligible.append(player)
-
-        return eligible
+        return current_players
 
     # ==========================================================
     # REPARTI
@@ -98,7 +103,9 @@ class PlayerService:
 
             player
 
-            for player in self.get_eligible_players(club_id)
+            for player in self.get_current_players(
+                club_id
+            )
 
             if player["position"] == "Goalkeeper"
 
@@ -113,7 +120,9 @@ class PlayerService:
 
             player
 
-            for player in self.get_eligible_players(club_id)
+            for player in self.get_current_players(
+                club_id
+            )
 
             if player["position"] == "Defender"
 
@@ -128,7 +137,9 @@ class PlayerService:
 
             player
 
-            for player in self.get_eligible_players(club_id)
+            for player in self.get_current_players(
+                club_id
+            )
 
             if player["position"] == "Midfield"
 
@@ -143,7 +154,9 @@ class PlayerService:
 
             player
 
-            for player in self.get_eligible_players(club_id)
+            for player in self.get_current_players(
+                club_id
+            )
 
             if player["position"] == "Attack"
 

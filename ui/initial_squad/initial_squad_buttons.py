@@ -1,9 +1,5 @@
 import discord
 
-from ui.initial_squad.player_list_view import (
-    PlayerListView
-)
-
 
 class RoleButton(discord.ui.Button):
     """Pulsante generico per un reparto."""
@@ -32,18 +28,8 @@ class RoleButton(discord.ui.Button):
 
         view = self.view
 
-        draft = view.service.get_draft(
-            view.manager_id
-        )
-
-        player_list = PlayerListView(
-
-            manager_id=view.manager_id,
-
-            role=self.role,
-
-            parent_view=view
-
+        player_list = view.open_player_list(
+            self.role
         )
 
         await player_list.show(
@@ -131,7 +117,9 @@ class ConfirmSquadButton(discord.ui.Button):
 
             style=discord.ButtonStyle.success,
 
-            row=2
+            row=2,
+
+            disabled=True
 
         )
 
@@ -142,7 +130,7 @@ class ConfirmSquadButton(discord.ui.Button):
 
         await interaction.response.send_message(
 
-            "La conferma sarà disponibile quando la rosa sarà completa.",
+            "🎉 La conferma della rosa sarà implementata nel prossimo step.",
 
             ephemeral=True
 

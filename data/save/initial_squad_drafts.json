@@ -4,7 +4,10 @@
         "club_id": 152,
         "budget": 100,
         "points_used": 0,
-        "players": [],
+        "players": [
+            5704,
+            14587
+        ],
         "confirmed": false
     }
 ]

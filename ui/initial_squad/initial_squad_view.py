@@ -40,6 +40,50 @@ class InitialSquadView(discord.ui.View):
         self.add_item(ForwardsButton())
         self.add_item(ConfirmSquadButton())
 
+    # ==========================================================
+    # AGGIORNA STATO PULSANTI
+    # ==========================================================
+
+    def _update_buttons(self):
+
+        rules = self.service.get_rules()
+
+        all_completed = True
+
+        for item in self.children:
+
+            # --------------------------------------------------
+            # Pulsanti reparti
+            # --------------------------------------------------
+
+            if hasattr(item, "role"):
+
+                completed = self.service.is_role_complete(
+
+                    self.manager_id,
+
+                    item.role
+
+                )
+
+                item.disabled = completed
+
+                if not completed:
+
+                    all_completed = False
+
+            # --------------------------------------------------
+            # Pulsante conferma
+            # --------------------------------------------------
+
+            elif isinstance(item, ConfirmSquadButton):
+
+                item.disabled = not all_completed
+
+    # ==========================================================
+    # VISUALIZZAZIONE
+    # ==========================================================
+
     async def show(
         self,
         interaction: discord.Interaction
@@ -53,21 +97,34 @@ class InitialSquadView(discord.ui.View):
             self.manager_id
         )
 
+        self._update_buttons()
+
         embed = self.embed_builder.build_home(
+
             draft,
+
             counts
+
         )
 
         await interaction.response.edit_message(
+
             embed=embed,
+
             view=self
+
         )
 
         self.message = await interaction.original_response()
 
+    # ==========================================================
+    # REFRESH
+    # ==========================================================
+
     async def refresh(self):
 
         if self.message is None:
+
             return
 
         draft = self.service.get_draft(
@@ -78,12 +135,20 @@ class InitialSquadView(discord.ui.View):
             self.manager_id
         )
 
+        self._update_buttons()
+
         embed = self.embed_builder.build_home(
+
             draft,
+
             counts
+
         )
 
         await self.message.edit(
+
             embed=embed,
+
             view=self
+
         )

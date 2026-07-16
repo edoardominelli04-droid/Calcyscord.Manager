@@ -82,6 +82,40 @@ class InitialSquadService:
                 break
 
         self.save_all(drafts)
+
+    # ==========================================================
+    # AGGIUNTA GIOCATORE
+    # ==========================================================
+
+    def add_player(
+        self,
+        manager_id,
+        player_id
+    ):
+
+        draft = self.get_draft(
+            manager_id
+        )
+
+        if draft is None:
+
+            raise ValueError(
+                "Bozza non trovata."
+            )
+
+        if player_id in draft["players"]:
+
+            return False
+
+        draft["players"].append(
+            player_id
+        )
+
+        self.save(
+            draft
+        )
+
+        return True
     
     # ==========================================================
     # STATISTICHE BOZZA
@@ -134,3 +168,39 @@ class InitialSquadService:
                 counts[role] += 1
 
         return counts
+    
+    # ==========================================================
+    # REGOLE ROSA
+    # ==========================================================
+
+    def get_rules(self):
+
+        return self.db.get_config_file(
+            "initial_squad_rules.json"
+        )
+    
+    # ==========================================================
+    # REPARTO COMPLETATO
+    # ==========================================================
+
+    def is_role_complete(
+        self,
+        manager_id,
+        role
+    ):
+
+        counts = self.get_role_counts(
+            manager_id
+        )
+
+        rules = self.get_rules()
+
+        required = rules.get(
+            role,
+            0
+        )
+
+        return counts.get(
+            role,
+            0
+        ) >= required

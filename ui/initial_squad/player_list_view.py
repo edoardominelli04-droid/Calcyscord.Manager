@@ -2,6 +2,9 @@ import discord
 
 from services.game.player_service import PlayerService
 from services.game.manager_service import ManagerService
+from services.game.initial_squad_service import (
+    InitialSquadService
+)
 
 from ui.initial_squad.player_list_embed import (
     PlayerListEmbedBuilder
@@ -36,6 +39,8 @@ class PlayerListView(discord.ui.View):
 
         self.manager_service = ManagerService()
 
+        self.initial_squad_service = InitialSquadService()
+
         self.embed_builder = PlayerListEmbedBuilder()
 
         self.message = None
@@ -68,41 +73,65 @@ class PlayerListView(discord.ui.View):
 
             )
 
+    # ==========================================================
+    # CARICAMENTO GIOCATORI
+    # ==========================================================
+
     def _load_players(self):
+
+        draft = self.initial_squad_service.get_draft(
+            self.manager_id
+        )
+
+        selected = set()
+
+        if draft is not None:
+
+            selected = set(
+                draft["players"]
+            )
 
         if self.role == "Goalkeeper":
 
-            return self.player_service.get_goalkeepers(
-
+            players = self.player_service.get_goalkeepers(
                 self.club_id
-
             )
 
-        if self.role == "Defender":
+        elif self.role == "Defender":
 
-            return self.player_service.get_defenders(
-
+            players = self.player_service.get_defenders(
                 self.club_id
-
             )
 
-        if self.role == "Midfield":
+        elif self.role == "Midfield":
 
-            return self.player_service.get_midfielders(
-
+            players = self.player_service.get_midfielders(
                 self.club_id
-
             )
 
-        if self.role == "Attack":
+        elif self.role == "Attack":
 
-            return self.player_service.get_forwards(
-
+            players = self.player_service.get_forwards(
                 self.club_id
-
             )
 
-        return []
+        else:
+
+            players = []
+
+        return [
+
+            player
+
+            for player in players
+
+            if player["id"] not in selected
+
+        ]
+
+    # ==========================================================
+    # VISUALIZZAZIONE
+    # ==========================================================
 
     async def show(
         self,
@@ -127,16 +156,36 @@ class PlayerListView(discord.ui.View):
 
         self.message = await interaction.original_response()
 
+    # ==========================================================
+    # SELEZIONE GIOCATORE
+    # ==========================================================
+
     async def select_player(
         self,
-        interaction: discord.Interaction,
+        interaction,
         player_id
     ):
 
-        await interaction.response.send_message(
+        added = self.initial_squad_service.add_player(
 
-            f"Hai selezionato il giocatore {player_id}",
+            self.manager_id,
 
-            ephemeral=True
+            player_id
 
+        )
+
+        if not added:
+
+            await interaction.response.send_message(
+
+                "❌ Giocatore già selezionato.",
+
+                ephemeral=True
+
+            )
+
+            return
+
+        await self.parent_view.show(
+            interaction
         )
