@@ -1,79 +1,121 @@
 import discord
 
+from ui.initial_squad.player_list_view import (
+    PlayerListView
+)
 
-class GoalkeepersButton(discord.ui.Button):
+
+class RoleButton(discord.ui.Button):
+    """Pulsante generico per un reparto."""
+
+    def __init__(
+        self,
+        label,
+        emoji,
+        role,
+        row
+    ):
+
+        self.role = role
+
+        super().__init__(
+            label=label,
+            emoji=emoji,
+            style=discord.ButtonStyle.secondary,
+            row=row
+        )
+
+    async def callback(
+        self,
+        interaction: discord.Interaction
+    ):
+
+        view = self.view
+
+        draft = view.service.get_draft(
+            view.manager_id
+        )
+
+        player_list = PlayerListView(
+
+            manager_id=view.manager_id,
+
+            role=self.role,
+
+            parent_view=view
+
+        )
+
+        await player_list.show(
+            interaction
+        )
+
+
+class GoalkeepersButton(RoleButton):
 
     def __init__(self):
 
         super().__init__(
+
             label="Portieri",
+
             emoji="🥅",
-            style=discord.ButtonStyle.secondary,
+
+            role="Goalkeeper",
+
             row=0
-        )
 
-    async def callback(self, interaction):
-
-        await interaction.response.send_message(
-            "Funzione in sviluppo.",
-            ephemeral=True
         )
 
 
-class DefendersButton(discord.ui.Button):
+class DefendersButton(RoleButton):
 
     def __init__(self):
 
         super().__init__(
+
             label="Difensori",
+
             emoji="🛡️",
-            style=discord.ButtonStyle.secondary,
+
+            role="Defender",
+
             row=0
-        )
 
-    async def callback(self, interaction):
-
-        await interaction.response.send_message(
-            "Funzione in sviluppo.",
-            ephemeral=True
         )
 
 
-class MidfieldersButton(discord.ui.Button):
+class MidfieldersButton(RoleButton):
 
     def __init__(self):
 
         super().__init__(
+
             label="Centrocampisti",
+
             emoji="🎯",
-            style=discord.ButtonStyle.secondary,
+
+            role="Midfield",
+
             row=1
-        )
 
-    async def callback(self, interaction):
-
-        await interaction.response.send_message(
-            "Funzione in sviluppo.",
-            ephemeral=True
         )
 
 
-class ForwardsButton(discord.ui.Button):
+class ForwardsButton(RoleButton):
 
     def __init__(self):
 
         super().__init__(
+
             label="Attaccanti",
+
             emoji="⚽",
-            style=discord.ButtonStyle.secondary,
+
+            role="Attack",
+
             row=1
-        )
 
-    async def callback(self, interaction):
-
-        await interaction.response.send_message(
-            "Funzione in sviluppo.",
-            ephemeral=True
         )
 
 
@@ -82,15 +124,26 @@ class ConfirmSquadButton(discord.ui.Button):
     def __init__(self):
 
         super().__init__(
+
             label="Conferma rosa",
+
             emoji="✅",
+
             style=discord.ButtonStyle.success,
+
             row=2
+
         )
 
-    async def callback(self, interaction):
+    async def callback(
+        self,
+        interaction: discord.Interaction
+    ):
 
         await interaction.response.send_message(
+
             "La conferma sarà disponibile quando la rosa sarà completa.",
+
             ephemeral=True
+
         )

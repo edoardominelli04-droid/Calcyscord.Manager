@@ -2,6 +2,10 @@ import discord
 
 from ui.start.start_embed import StartEmbedBuilder
 
+from ui.start.club_assigned_view import (
+    ClubAssignedView
+)
+
 
 class StartConfirmView(discord.ui.View):
     """Conferma finale della scelta del club."""
@@ -79,7 +83,7 @@ class StartConfirmView(discord.ui.View):
 
         try:
 
-            _, club = (
+            manager, club = (
 
                 self.parent_view.start_service.confirm_club(
 
@@ -105,17 +109,32 @@ class StartConfirmView(discord.ui.View):
 
             return
 
-        embed = self.embed_builder.build_completed(
+        competition = (
 
-            club
+            self.parent_view
+            .start_service
+            .db
+            .get_competition_by_id(
+
+                club["competition_id"]
+
+            )
 
         )
 
-        await interaction.edit_original_response(
+        view = ClubAssignedView(
 
-            embed=embed,
+            manager,
 
-            view=None
+            club,
+
+            competition
+
+        )
+
+        await view.show(
+
+            interaction
 
         )
 

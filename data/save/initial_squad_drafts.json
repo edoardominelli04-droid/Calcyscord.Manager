@@ -1,1 +1,10 @@
-[]
+[
+    {
+        "manager_id": 6,
+        "club_id": 152,
+        "budget": 100,
+        "points_used": 0,
+        "players": [],
+        "confirmed": false
+    }
+]

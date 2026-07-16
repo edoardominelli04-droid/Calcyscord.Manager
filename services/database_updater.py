@@ -3,6 +3,7 @@ from services.importers.competition_importer import CompetitionImporter
 from services.importers.club_importer import ClubImporter
 from services.importers.stadium_importer import StadiumImporter
 from services.importers.player_importer import PlayerImporter
+from services.importers.roster_importer import RosterImporter
 
 
 class DatabaseUpdater:
@@ -19,6 +20,8 @@ class DatabaseUpdater:
         self.stadium_importer = StadiumImporter()
 
         self.player_importer = PlayerImporter()
+
+        self.roster_importer = RosterImporter()
 
     def update_all(self):
 
@@ -41,3 +44,6 @@ class DatabaseUpdater:
         self.player_importer.import_players()
 
         print("✅ Database aggiornato con successo.")
+
+        print("Aggiornamento rose...")
+        self.roster_importer.import_rosters()

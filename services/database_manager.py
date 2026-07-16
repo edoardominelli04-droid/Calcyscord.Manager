@@ -236,6 +236,19 @@ class DatabaseManager:
             data
         )
 
+    def get_current_rosters(self):
+        return self._load_json(
+            self.save_path,
+            "current_rosters.json"
+        )
+
+    def save_current_rosters(self, data):
+        self._save_json(
+            self.save_path,
+            "current_rosters.json",
+            data
+        )
+
     # ==========================================================
     # CONFIG
     # ==========================================================
