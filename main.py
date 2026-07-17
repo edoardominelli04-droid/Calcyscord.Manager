@@ -72,6 +72,127 @@ async def ping(
     )
 
 
+@bot.command(name="riprendi")
+async def riprendi(
+    ctx
+):
+    """Riapre nei DM il percorso successivo alla rosa confermata."""
+
+    try:
+        from services.game.manager_service import ManagerService
+        from services.game.initial_squad_service import InitialSquadService
+
+        manager = ManagerService().get_by_discord_id(
+            ctx.author.id
+        )
+
+        if manager is None:
+            await ctx.send(
+                "❌ Manager non trovato. Usa prima `!start`."
+            )
+            return
+
+        initial_squad_service = InitialSquadService()
+        draft = initial_squad_service.get_draft(
+            manager["id"]
+        )
+
+        if draft is None:
+            await ctx.send(
+                "❌ Non esiste una composizione della rosa da riprendere."
+            )
+            return
+
+        if not draft.get("confirmed"):
+            await ctx.send(
+                "❌ La rosa iniziale non è stata ancora confermata."
+            )
+            return
+
+        statement_status = draft.get(
+            "statement_status",
+            "pending"
+        )
+
+        if statement_status != "pending":
+            from services.game.manager_statement_service import (
+                ManagerStatementService
+            )
+
+            if ManagerStatementService().is_preparation_complete(
+                manager["id"]
+            ):
+                await ctx.send(
+                    "✅ La preparazione iniziale è già completata. "
+                    "Usa `!club` e `!formazione` per gestire la squadra."
+                )
+                return
+
+        dm = await ctx.author.create_dm()
+
+        if statement_status == "pending":
+            from ui.initial_squad.initial_squad_embed import (
+                InitialSquadEmbedBuilder
+            )
+            from ui.initial_squad.manager_statement_view import (
+                ManagerStatementView
+            )
+
+            counts = initial_squad_service.get_role_counts(
+                manager["id"]
+            )
+
+            embed = InitialSquadEmbedBuilder().build_confirmed(
+                draft,
+                counts
+            )
+
+            view = ManagerStatementView(
+                manager["id"]
+            )
+
+        else:
+            from ui.initial_squad.manager_statement_view import (
+                ClubPreparationView
+            )
+
+            view = ClubPreparationView(
+                manager["id"]
+            )
+
+            embed = view.embed_builder.build_preparation(
+                manager["id"]
+            )
+
+        message = await dm.send(
+            embed=embed,
+            view=view
+        )
+
+        view.message = message
+
+        await ctx.send(
+            "📩 Percorso riaperto nei messaggi privati."
+        )
+
+    except discord.Forbidden:
+        await ctx.send(
+            "❌ Non posso inviarti messaggi privati. "
+            "Abilita i DM del server e riprova."
+        )
+
+    except Exception as error:
+        print(
+            "ERRORE COMANDO !riprendi:",
+            repr(error)
+        )
+
+        await ctx.send(
+            "❌ Impossibile riaprire il percorso: "
+            f"`{type(error).__name__}: {error}`"
+        )
+
+
 async def load_extensions():
 
     await bot.load_extension(

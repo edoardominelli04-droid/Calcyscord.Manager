@@ -41,6 +41,89 @@ class Manager(commands.Cog):
 
         if manager["club_id"] is not None:
 
+            # Permette di riprendere il percorso successivo alla
+            # conferma anche dopo un riavvio o un messaggio scaduto.
+            from services.game.initial_squad_service import (
+                InitialSquadService
+            )
+
+            initial_squad_service = InitialSquadService()
+            draft = initial_squad_service.get_draft(manager["id"])
+
+            if draft and draft.get("confirmed"):
+
+                try:
+                    statement_status = draft.get(
+                        "statement_status",
+                        "pending"
+                    )
+
+                    if statement_status != "pending":
+                        from services.game.manager_statement_service import (
+                            ManagerStatementService
+                        )
+
+                        if ManagerStatementService().is_preparation_complete(
+                            manager["id"]
+                        ):
+                            await ctx.send(
+                                "✅ La preparazione iniziale è già completata. "
+                                "Usa `!club` e `!formazione` per gestire "
+                                "la squadra."
+                            )
+                            return
+
+                    dm = await ctx.author.create_dm()
+
+                    if statement_status == "pending":
+                        from ui.initial_squad.initial_squad_embed import (
+                            InitialSquadEmbedBuilder
+                        )
+                        from ui.initial_squad.manager_statement_view import (
+                            ManagerStatementView
+                        )
+
+                        counts = initial_squad_service.get_role_counts(
+                            manager["id"]
+                        )
+
+                        embed = InitialSquadEmbedBuilder().build_confirmed(
+                            draft,
+                            counts
+                        )
+
+                        view = ManagerStatementView(manager["id"])
+
+                    else:
+                        from ui.initial_squad.manager_statement_view import (
+                            ClubPreparationView
+                        )
+
+                        view = ClubPreparationView(manager["id"])
+                        embed = view.embed_builder.build_preparation(
+                            manager["id"]
+                        )
+
+                    message = await dm.send(
+                        embed=embed,
+                        view=view
+                    )
+
+                    view.message = message
+
+                    await ctx.send(
+                        "📩 Ho riaperto nei messaggi privati "
+                        "la preparazione del tuo club."
+                    )
+
+                except discord.Forbidden:
+                    await ctx.send(
+                        "❌ Non posso inviarti messaggi privati. "
+                        "Abilita i DM e riprova."
+                    )
+
+                return
+
             embed = discord.Embed(
 
                 title="👔 Bentornato!",

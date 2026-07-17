@@ -236,6 +236,19 @@ class DatabaseManager:
             data
         )
 
+    def get_manager_statements(self):
+        return self._load_json(
+            self.save_path,
+            "manager_statements.json"
+        )
+
+    def save_manager_statements(self, data):
+        self._save_json(
+            self.save_path,
+            "manager_statements.json",
+            data
+        )
+
     def get_current_rosters(self):
         return self._load_json(
             self.save_path,

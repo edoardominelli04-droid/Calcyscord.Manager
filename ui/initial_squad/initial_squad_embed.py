@@ -51,11 +51,83 @@ class InitialSquadEmbedBuilder:
     # HOME
     # ==========================================================
 
+    def build_confirmed(
+        self,
+        draft,
+        counts
+    ):
+
+        rules = self.service.get_rules()
+
+        flexible_used = (
+            max(0, counts["Goalkeeper"] - rules["Goalkeeper"])
+            + max(0, counts["Defender"] - rules["Defender"])
+            + max(0, counts["Midfield"] - rules["Midfield"])
+            + max(0, counts["Attack"] - rules["Attack"])
+        )
+
+        embed = discord.Embed(
+            title="✅ Rosa iniziale confermata",
+            description=(
+                "I **20 giocatori** sono stati assegnati definitivamente "
+                "alla tua squadra."
+            ),
+            colour=discord.Colour.green()
+        )
+
+        embed.add_field(
+            name="📋 Riepilogo finale",
+            value=(
+                f"👥 Rosa: **{len(draft.get('players', []))}/20**\n"
+                f"⭐ Stars utilizzate: **{draft['points_used']}/{draft['budget']}**\n"
+                f"🔄 Posti flessibili: **{flexible_used}/{rules['Flexible']}**"
+            ),
+            inline=False
+        )
+
+        embed.add_field(
+            name="💳 Fine del budget iniziale",
+            value=(
+                "Le Stars residue sono scadute. Da questo momento "
+                "mercato e aste utilizzeranno i normali crediti."
+            ),
+            inline=False
+        )
+
+        status = draft.get("statement_status", "pending")
+
+        if status == "pending":
+            embed.add_field(
+                name="🎙️ Prima dichiarazione da manager",
+                value=(
+                    "Puoi lasciare un messaggio alla community per "
+                    "presentarti come nuovo manager del club. "
+                    "La dichiarazione è facoltativa."
+                ),
+                inline=False
+            )
+
+            embed.set_footer(
+                text="Scrivi la tua dichiarazione oppure prosegui senza pubblicarla."
+            )
+        else:
+            embed.set_footer(
+                text="La presentazione del manager è stata completata."
+            )
+
+        return embed
+
     def build_home(
         self,
         draft,
         counts
     ):
+
+        if draft.get("confirmed"):
+            return self.build_confirmed(
+                draft,
+                counts
+            )
 
         budget = draft["budget"]
 

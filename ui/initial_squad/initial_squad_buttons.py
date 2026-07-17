@@ -160,9 +160,35 @@ class ConfirmSquadButton(discord.ui.Button):
             counts
         )
 
-        await interaction.edit_original_response(
-            embed=embed,
-            view=view
+        from ui.initial_squad.manager_statement_view import (
+            ManagerStatementView
         )
 
-        view.message = await interaction.original_response()
+        statement_view = ManagerStatementView(
+            view.manager_id
+        )
+
+        # Arresta esplicitamente la vecchia InitialSquadView:
+        # in questo modo Discord non puo ripubblicare i pulsanti dei reparti
+        # dopo che la rosa e stata confermata.
+        view.stop()
+
+        message = interaction.message
+
+        if message is not None:
+
+            await message.edit(
+                embed=embed,
+                view=statement_view
+            )
+
+            statement_view.message = message
+
+        else:
+
+            await interaction.edit_original_response(
+                embed=embed,
+                view=statement_view
+            )
+
+            statement_view.message = await interaction.original_response()

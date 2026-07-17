@@ -123,4 +123,28 @@ class ClubEmbedBuilder:
 
             )
 
+        if not data.get("initial_setup_complete", False):
+
+            missing = []
+
+            if not data.get("initial_formation_ready", False):
+                missing.append("modulo e titolari")
+
+            if not data.get("initial_captain_ready", False):
+                missing.append("capitano")
+
+            embed.add_field(
+
+                name="⚠️ Formazione iniziale incompleta",
+
+                value=(
+                    "Completa **"
+                    + " e ".join(missing)
+                    + "** con `!formazione` prima della prossima giornata."
+                ),
+
+                inline=False
+
+            )
+
         return embed

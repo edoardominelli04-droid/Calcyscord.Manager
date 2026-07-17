@@ -80,6 +80,27 @@ class ClubService:
                 key=lambda p: p.get("market_value", 0) or 0
             )
 
+        formation = next(
+            (
+                item
+                for item in self.db.get_formations()
+                if item["manager_id"] == manager["id"]
+            ),
+            None
+        )
+
+        starting = formation.get("starting", {}) if formation else {}
+
+        formation_ready = (
+            formation is not None
+            and len(starting) == 11
+        )
+
+        captain_ready = any(
+            data.get("captain")
+            for data in starting.values()
+        )
+
         return {
             "manager": manager,
             "finance": finance,
@@ -90,7 +111,12 @@ class ClubService:
             "players_count": len(squad_players),
             "average_age": average_age,
             "market_value": market_value,
-            "most_valuable_player": most_valuable
+            "most_valuable_player": most_valuable,
+            "initial_formation_ready": formation_ready,
+            "initial_captain_ready": captain_ready,
+            "initial_setup_complete": (
+                formation_ready and captain_ready
+            )
         }
 
     def get_all_players(

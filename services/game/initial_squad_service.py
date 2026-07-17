@@ -883,6 +883,7 @@ class InitialSquadService:
             draft["confirmed"] = True
             draft["confirmed_at"] = datetime.now().isoformat()
             draft["points_remaining"] = 0
+            draft["statement_status"] = "pending"
 
             self.save(draft)
 
