@@ -1,8 +1,6 @@
 from services.database_manager import DatabaseManager
 from services.game.manager_service import ManagerService
 from services.game.club_ownership_service import ClubOwnershipService
-from services.game.squad_service import SquadService
-from services.game.formation_service import FormationService
 from services.game.initial_squad_service import InitialSquadService
 
 
@@ -13,8 +11,6 @@ class ClubSelectionService:
         self.db = DatabaseManager()
         self.manager_service = ManagerService()
         self.ownership_service = ClubOwnershipService()
-        self.squad_service = SquadService()
-        self.formation_service = FormationService()
         self.initial_squad_service = InitialSquadService()
 
     def choose_club(self, discord_id, club_id):
@@ -53,29 +49,5 @@ class ClubSelectionService:
             club_id
 
         )
-
-        try:
-
-            self.squad_service.create_initial_squad(
-
-                manager["id"],
-                club_id
-
-            )
-
-        except Exception:
-
-            import traceback
-  
-            traceback.print_exc()
-
-            raise
-
-        try:
-            self.formation_service.create_initial_formation(
-                manager["id"]
-          )
-        except Exception as e:
-            print("ERRORE FORMAZIONE:", e)
 
         return manager, club

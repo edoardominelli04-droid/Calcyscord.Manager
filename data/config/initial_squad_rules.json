@@ -1,6 +1,7 @@
 {
-    "Goalkeeper": 2,
-    "Defender": 8,
-    "Midfield": 8,
-    "Attack": 5
+    "Goalkeeper": 1,
+    "Defender": 6,
+    "Midfield": 5,
+    "Attack": 3,
+    "Flexible": 5
 }

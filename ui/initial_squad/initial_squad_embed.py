@@ -61,6 +61,10 @@ class InitialSquadEmbedBuilder:
 
         used = draft["points_used"]
 
+        tier_counts = self.service.get_tier_counts(
+            draft["manager_id"]
+        )
+
         rules = self.service.get_rules()
 
         total_required = sum(
@@ -69,6 +73,53 @@ class InitialSquadEmbedBuilder:
 
         total_selected = sum(
             counts.values()
+        )
+
+        flexible_used = (
+            max(0, counts["Goalkeeper"] - rules["Goalkeeper"])
+            + max(0, counts["Defender"] - rules["Defender"])
+            + max(0, counts["Midfield"] - rules["Midfield"])
+            + max(0, counts["Attack"] - rules["Attack"])
+        )
+
+        goalkeeper_required = min(
+            counts["Goalkeeper"],
+            rules["Goalkeeper"]
+        )
+
+        defender_required = min(
+            counts["Defender"],
+            rules["Defender"]
+        )
+
+        midfield_required = min(
+            counts["Midfield"],
+            rules["Midfield"]
+        )
+
+        attack_required = min(
+            counts["Attack"],
+            rules["Attack"]
+        )
+
+        defender_flexible = max(
+            0,
+            counts["Defender"] - rules["Defender"]
+        )
+
+        goalkeeper_flexible = max(
+            0,
+            counts["Goalkeeper"] - rules["Goalkeeper"]
+        )
+
+        midfield_flexible = max(
+            0,
+            counts["Midfield"] - rules["Midfield"]
+        )
+
+        attack_flexible = max(
+            0,
+            counts["Attack"] - rules["Attack"]
         )
 
         percentage = int(
@@ -112,7 +163,13 @@ class InitialSquadEmbedBuilder:
         # FOOTER
         # ======================================================
 
-        if percentage == 100:
+        if draft.get("confirmed"):
+
+            footer = (
+                "✅ Rosa confermata. Le scelte sono ora definitive."
+            )
+
+        elif percentage == 100:
 
             footer = (
                 "🎉 La tua rosa è pronta. Premi 'Conferma rosa' per iniziare la tua carriera."
@@ -135,6 +192,12 @@ class InitialSquadEmbedBuilder:
             colour=discord.Colour.blurple()
 
         )
+
+        if draft.get("confirmed"):
+
+            embed.title = "✅ Rosa iniziale confermata"
+
+            embed.colour = discord.Colour.green()
 
         embed.description = (
 
@@ -168,13 +231,19 @@ class InitialSquadEmbedBuilder:
 
             value=(
 
-                f"🥅 Portieri: **{counts['Goalkeeper']}/{rules['Goalkeeper']}**{goalkeeper_status}\n"
+                f"🥅 Portieri: **{goalkeeper_required}/{rules['Goalkeeper']} obbligatori** "
+                f"+ **{goalkeeper_flexible} flessibili**{goalkeeper_status}\n"
 
-                f"🛡️ Difensori: **{counts['Defender']}/{rules['Defender']}**{defender_status}\n"
+                f"🛡️ Difensori: **{defender_required}/{rules['Defender']} obbligatori** "
+                f"+ **{defender_flexible} flessibili**{defender_status}\n"
 
-                f"🎯 Centrocampisti: **{counts['Midfield']}/{rules['Midfield']}**{midfield_status}\n"
+                f"🎯 Centrocampisti: **{midfield_required}/{rules['Midfield']} obbligatori** "
+                f"+ **{midfield_flexible} flessibili**{midfield_status}\n"
 
-                f"⚽ Attaccanti: **{counts['Attack']}/{rules['Attack']}**{attack_status}"
+                f"⚽ Attaccanti: **{attack_required}/{rules['Attack']} obbligatori** "
+                f"+ **{attack_flexible} flessibili**{attack_status}\n"
+
+                f"🔄 Posti flessibili: **{flexible_used}/{rules['Flexible']}**"
 
             ),
 
@@ -182,15 +251,22 @@ class InitialSquadEmbedBuilder:
 
         )
 
-        embed.add_field(
+        if not draft.get("confirmed"):
 
-            name="💰 Budget",
+            embed.add_field(
 
-            value=f"**{used}/{budget} punti**",
+                name="💰 Budget",
 
-            inline=False
+                value=(
+                    f"Utilizzato: ⭐ **{used}/{budget}**\n"
+                    f"Disponibile: ⭐ **{max(0, budget - used)}**\n"
+                    f"Fascia S: **{tier_counts['S']}/2** • "
+                    f"Fasce S+A: **{tier_counts['S'] + tier_counts['A']}/6**"
+                ),
 
-        )
+                inline=False
+
+            )
 
         embed.set_footer(
 

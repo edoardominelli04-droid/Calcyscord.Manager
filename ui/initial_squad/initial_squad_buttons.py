@@ -128,10 +128,41 @@ class ConfirmSquadButton(discord.ui.Button):
         interaction: discord.Interaction
     ):
 
-        await interaction.response.send_message(
+        view = self.view
 
-            "🎉 La conferma della rosa sarà implementata nel prossimo step.",
+        await interaction.response.defer()
 
-            ephemeral=True
-
+        confirmed, message = view.service.confirm_squad(
+            view.manager_id
         )
+
+        if not confirmed:
+
+            await interaction.followup.send(
+                f"❌ {message}",
+                ephemeral=True
+            )
+
+            return
+
+        draft = view.service.get_draft(
+            view.manager_id
+        )
+
+        counts = view.service.get_role_counts(
+            view.manager_id
+        )
+
+        view._update_buttons()
+
+        embed = view.embed_builder.build_home(
+            draft,
+            counts
+        )
+
+        await interaction.edit_original_response(
+            embed=embed,
+            view=view
+        )
+
+        view.message = await interaction.original_response()

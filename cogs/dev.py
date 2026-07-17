@@ -102,6 +102,18 @@ class Dev(commands.Cog):
         self.db.save_formations(formations)
 
         # ==========================
+        # BOZZA ROSA INIZIALE
+        # ==========================
+
+        drafts = [
+            draft
+            for draft in self.db.get_initial_squad_drafts()
+            if draft["manager_id"] != manager_id
+        ]
+
+        self.db.save_initial_squad_drafts(drafts)
+
+        # ==========================
         # MESSAGGIO
         # ==========================
 
@@ -115,7 +127,8 @@ class Dev(commands.Cog):
                 "• Club assegnato\n"
                 "• Rosa\n"
                 "• Contratti\n"
-                "• Formazione"
+                "• Formazione\n"
+                "• Bozza rosa iniziale"
             ),
             color=discord.Color.red()
         )

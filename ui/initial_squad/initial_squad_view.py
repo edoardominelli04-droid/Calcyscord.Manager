@@ -14,6 +14,10 @@ from ui.initial_squad.initial_squad_buttons import (
     ConfirmSquadButton
 )
 
+from ui.initial_squad.player_list_view import (
+    PlayerListView
+)
+
 
 class InitialSquadView(discord.ui.View):
 
@@ -46,9 +50,17 @@ class InitialSquadView(discord.ui.View):
 
     def _update_buttons(self):
 
-        rules = self.service.get_rules()
+        draft = self.service.get_draft(
+            self.manager_id
+        )
 
-        all_completed = True
+        squad_confirmed = bool(
+            draft and draft.get("confirmed")
+        )
+
+        squad_completed = self.service.is_squad_complete(
+            self.manager_id
+        )
 
         for item in self.children:
 
@@ -66,11 +78,13 @@ class InitialSquadView(discord.ui.View):
 
                 )
 
-                item.disabled = completed
+                item.disabled = squad_confirmed
 
-                if not completed:
-
-                    all_completed = False
+                item.style = (
+                    discord.ButtonStyle.success
+                    if completed
+                    else discord.ButtonStyle.secondary
+                )
 
             # --------------------------------------------------
             # Pulsante conferma
@@ -78,7 +92,25 @@ class InitialSquadView(discord.ui.View):
 
             elif isinstance(item, ConfirmSquadButton):
 
-                item.disabled = not all_completed
+                item.disabled = (
+                    not squad_completed
+                    or squad_confirmed
+                )
+
+    # ==========================================================
+    # APERTURA LISTA GIOCATORI
+    # ==========================================================
+
+    def open_player_list(
+        self,
+        role
+    ):
+
+        return PlayerListView(
+            self.manager_id,
+            role,
+            self
+        )
 
     # ==========================================================
     # VISUALIZZAZIONE

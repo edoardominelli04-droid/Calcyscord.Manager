@@ -18,13 +18,22 @@ class PlayerListSelect(discord.ui.Select):
 
             value = player.get("market_value") or 0
 
+            tier = player.get("initial_tier", "D")
+
+            cost = player.get("initial_cost", 1)
+
             options.append(
 
                 discord.SelectOption(
 
-                    label=player["name"][:100],
+                    label=(
+                        f"{player['name']} ⭐ {cost}"
+                    )[:100],
 
-                    description=f"{value:,.0f} €".replace(",", "."),
+                    description=(
+                        f"Fascia {tier} • "
+                        f"{value:,.0f} €"
+                    ).replace(",", ".")[:100],
 
                     value=str(player["id"])
 

@@ -14,6 +14,11 @@ from ui.initial_squad.player_list_select import (
     PlayerListSelect
 )
 
+from ui.initial_squad.player_list_buttons import (
+    BackToInitialSquadButton,
+    PlayerRemoveSelect
+)
+
 
 class PlayerListView(discord.ui.View):
     """Visualizza la lista dei giocatori di un reparto."""
@@ -57,7 +62,16 @@ class PlayerListView(discord.ui.View):
 
         self.club_id = manager["club_id"]
 
-        self.players = self._load_players()
+        self.players = self._add_pricing(
+            self._load_players()
+        )
+
+        self.selected_players = self._add_pricing(
+            self.initial_squad_service.get_selected_players(
+                self.manager_id,
+                self.role
+            )
+        )
 
         if self.players:
 
@@ -73,9 +87,48 @@ class PlayerListView(discord.ui.View):
 
             )
 
+        if self.selected_players:
+
+            self.add_item(
+
+                PlayerRemoveSelect(
+                    self,
+                    self.selected_players
+                )
+
+            )
+
+        self.add_item(
+            BackToInitialSquadButton(self)
+        )
+
     # ==========================================================
     # CARICAMENTO GIOCATORI
     # ==========================================================
+
+    def _add_pricing(self, players):
+
+        priced_players = []
+
+        for player in players:
+
+            priced_player = dict(
+                player
+            )
+
+            pricing = self.initial_squad_service.get_player_pricing(
+                self.manager_id,
+                player["id"]
+            )
+
+            priced_player["initial_tier"] = pricing["tier"]
+            priced_player["initial_cost"] = pricing["cost"]
+
+            priced_players.append(
+                priced_player
+            )
+
+        return priced_players
 
     def _load_players(self):
 
@@ -142,7 +195,14 @@ class PlayerListView(discord.ui.View):
 
             self.role,
 
-            self.players
+            self.players,
+
+            self.selected_players,
+
+            self.initial_squad_service.get_rules().get(
+                self.role,
+                0
+            )
 
         )
 
@@ -166,7 +226,7 @@ class PlayerListView(discord.ui.View):
         player_id
     ):
 
-        added = self.initial_squad_service.add_player(
+        added, error = self.initial_squad_service.try_add_player(
 
             self.manager_id,
 
@@ -178,10 +238,34 @@ class PlayerListView(discord.ui.View):
 
             await interaction.response.send_message(
 
-                "❌ Giocatore già selezionato.",
+                f"❌ {error or 'Giocatore non selezionabile.'}",
 
                 ephemeral=True
 
+            )
+
+            return
+
+        await self.parent_view.show(
+            interaction
+        )
+
+    async def remove_player(
+        self,
+        interaction,
+        player_id
+    ):
+
+        removed = self.initial_squad_service.remove_player(
+            self.manager_id,
+            player_id
+        )
+
+        if not removed:
+
+            await interaction.response.send_message(
+                "❌ Non è stato possibile rimuovere il giocatore.",
+                ephemeral=True
             )
 
             return
