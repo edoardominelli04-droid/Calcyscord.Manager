@@ -69,6 +69,11 @@ class Formation(commands.Cog):
 
             return
 
+        # Sincronizza titolari e panchina con i soli record rosa attivi.
+        refresh = self.formation_service.refresh_formation(manager["id"])
+        if refresh["success"]:
+            formation = refresh["data"]["formation"]
+
         embed = self.formation_embed_builder.build(
             manager["id"]
         )
@@ -154,3 +159,4 @@ async def setup(bot):
     await bot.add_cog(
         Formation(bot)
     )
+

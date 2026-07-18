@@ -1,0 +1,54 @@
+[
+    {
+        "id": 1,
+        "manager_id": 6,
+        "discord_id": "595215755549736970",
+        "manager_name": "Bassotto",
+        "club_id": 152,
+        "club_name": "Società Sportiva Lazio S.p.A.",
+        "status": "published",
+        "text": "ABBIAMO LIBERATO LA LAZIO!",
+        "channel_id": "1527694721173028985",
+        "message_id": "1527705301007208471",
+        "published_at": "2026-07-17T17:55:27.222168"
+    },
+    {
+        "id": 2,
+        "manager_id": 6,
+        "discord_id": "595215755549736970",
+        "manager_name": "Bassotto",
+        "club_id": 219,
+        "club_name": "Atalanta",
+        "status": "published",
+        "text": "Se allo scadere di questo termine la maggioranza confermerà di voler proseguire come se nulla fosse accaduto, riterremo definitivamente esaurita ogni credibilità politica dell'attuale governo regionale e chiederemo apertamente che la Presidente tragga le conseguenze politiche della perdita di fiduci",
+        "channel_id": "1527694721173028985",
+        "message_id": "1527727027740872785",
+        "published_at": "2026-07-17T19:21:47.307080"
+    },
+    {
+        "id": 3,
+        "manager_id": 6,
+        "discord_id": "595215755549736970",
+        "manager_name": "Bassotto",
+        "club_id": 152,
+        "club_name": "Lazio",
+        "status": "published",
+        "text": "L'ABBIAMO LIBERATA",
+        "channel_id": "1527694721173028985",
+        "message_id": "1527808551412568196",
+        "published_at": "2026-07-18T00:45:44.034942"
+    },
+    {
+        "id": 4,
+        "manager_id": 6,
+        "discord_id": "595215755549736970",
+        "manager_name": "Bassotto",
+        "club_id": 152,
+        "club_name": "Lazio",
+        "status": "published",
+        "text": "STIAMO CONTINUANDO A LIBERARE LA LAZIO",
+        "channel_id": "1527694721173028985",
+        "message_id": "1527983258875461684",
+        "published_at": "2026-07-18T12:19:57.729756"
+    }
+]

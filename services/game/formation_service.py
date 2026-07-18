@@ -1,3 +1,5 @@
+import random
+
 from services.database_manager import DatabaseManager
 from services.game.module_service import ModuleService
 from services.game.data.position_rules import POSITION_RULES
@@ -598,6 +600,124 @@ class FormationService:
 
         )
     
+    # ==========================================================
+    # RICOSTRUZIONE CASUALE
+    # ==========================================================
+
+    def rebuild_random_formation(self, manager_id):
+        formation = self.get_manager_formation(manager_id)
+
+        if formation is None:
+            return self._error(
+                FORMATION_NOT_FOUND,
+                "Formazione non trovata."
+            )
+
+        squad_members = [
+            member for member in self.db.get_squads()
+            if member["manager_id"] == manager_id
+            and member.get("status") == "active"
+        ]
+
+        # Elimina eventuali duplicati conservando un solo record per giocatore.
+        player_ids = list(dict.fromkeys(
+            member["player_id"] for member in squad_members
+        ))
+        players = [
+            player for player_id in player_ids
+            if (player := self.db.get_player_by_id(player_id)) is not None
+        ]
+
+        slots = self.module_service.get_slots(formation["module"])
+        if len(players) < len(slots):
+            return self._error(
+                INVALID_OPERATION,
+                "La rosa non contiene abbastanza giocatori attivi."
+            )
+
+        candidates = {}
+        for slot in slots:
+            compatible = [
+                player for player in players
+                if self._is_player_compatible(slot, player)["success"]
+            ]
+            random.shuffle(compatible)
+            candidates[slot] = compatible
+
+        # Gli slot più difficili vengono assegnati per primi. Il backtracking
+        # evita che una scelta casuale iniziale renda impossibili gli ultimi slot.
+        ordered_slots = list(slots)
+        random.shuffle(ordered_slots)
+        ordered_slots.sort(key=lambda slot: len(candidates[slot]))
+
+        assignment = {}
+        used = set()
+
+        def assign(index):
+            if index == len(ordered_slots):
+                return True
+
+            slot = ordered_slots[index]
+            for player in candidates[slot]:
+                player_id = player["id"]
+                if player_id in used:
+                    continue
+                assignment[slot] = player_id
+                used.add(player_id)
+                if assign(index + 1):
+                    return True
+                used.remove(player_id)
+                assignment.pop(slot, None)
+            return False
+
+        if not assign(0):
+            return self._error(
+                INCOMPATIBLE_POSITION,
+                "Non è possibile completare tutti gli slot con i ruoli disponibili."
+            )
+
+        previous_captain = next(
+            (
+                data["player_id"]
+                for data in formation.get("starting", {}).values()
+                if data.get("captain")
+            ),
+            None
+        )
+        previous_vice = next(
+            (
+                data["player_id"]
+                for data in formation.get("starting", {}).values()
+                if data.get("vice_captain")
+            ),
+            None
+        )
+
+        formation["starting"] = {
+            slot: {
+                "player_id": assignment[slot],
+                "captain": assignment[slot] == previous_captain,
+                "vice_captain": assignment[slot] == previous_vice
+            }
+            for slot in slots
+        }
+
+        bench = [
+            player["id"] for player in players
+            if player["id"] not in used
+        ]
+        random.shuffle(bench)
+        formation["bench"] = bench
+
+        result = self._save_formation(formation)
+        if not result["success"]:
+            return result
+
+        return self._success({
+            "formation": formation,
+            "captain_preserved": previous_captain in used
+        })
+
     # ==========================================================
     # STARTING
     # ==========================================================

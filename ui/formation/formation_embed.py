@@ -177,9 +177,16 @@ class FormationEmbedBuilder:
             inline=True
         )
 
+        active_player_ids = {
+            member["player_id"]
+            for member in self.db.get_squads()
+            if member["manager_id"] == manager_id
+            and member.get("status") == "active"
+        }
+
         embed.add_field(
             name="👥 Rosa",
-            value=f"{11 + len(bench)} giocatori",
+            value=f"{len(active_player_ids)} giocatori",
             inline=True
         )
 
@@ -248,6 +255,9 @@ class FormationEmbedBuilder:
             value=panchina_text,
             inline=False
         )
+
+        if club.get("logo"):
+            embed.set_thumbnail(url=club["logo"])
 
         embed.set_footer(
             text="Usa i pulsanti qui sotto per gestire la formazione."

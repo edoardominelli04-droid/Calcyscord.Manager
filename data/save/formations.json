@@ -167,71 +167,71 @@
         "module": "4-3-3",
         "starting": {
             "GK": {
-                "player_id": 4891,
+                "player_id": 14587,
                 "captain": false,
                 "vice_captain": false
             },
             "LB": {
-                "player_id": 12642,
-                "captain": false,
+                "player_id": 11286,
+                "captain": true,
                 "vice_captain": false
             },
             "CB1": {
-                "player_id": 6779,
+                "player_id": 4193,
                 "captain": false,
                 "vice_captain": false
             },
             "CB2": {
-                "player_id": 11956,
+                "player_id": 12308,
                 "captain": false,
                 "vice_captain": false
             },
             "RB": {
-                "player_id": 11902,
+                "player_id": 6527,
                 "captain": false,
                 "vice_captain": false
             },
             "CM1": {
-                "player_id": 5396,
+                "player_id": 11214,
                 "captain": false,
                 "vice_captain": false
             },
             "CM2": {
-                "player_id": 12362,
+                "player_id": 10566,
                 "captain": false,
                 "vice_captain": false
             },
             "CM3": {
-                "player_id": 13614,
+                "player_id": 5771,
                 "captain": false,
                 "vice_captain": false
             },
             "LW": {
-                "player_id": 14762,
+                "player_id": 7417,
                 "captain": false,
                 "vice_captain": false
             },
             "ST": {
-                "player_id": 8899,
+                "player_id": 12409,
                 "captain": false,
                 "vice_captain": false
             },
             "RW": {
-                "player_id": 9475,
+                "player_id": 10460,
                 "captain": false,
                 "vice_captain": false
             }
         },
         "bench": [
-            8570,
-            11972,
-            4106,
-            7701,
-            10101,
-            4755,
-            8666,
-            7369,
-            13845
+            11163,
+            8220,
+            15281,
+            5693,
+            5704,
+            8661,
+            11362,
+            15086,
+            11510
         ]
     }
 ]

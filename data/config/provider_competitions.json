@@ -1,0 +1,12 @@
+[
+  {"transfermarkt_id":"IT1","football_data_code":"SA","playable":true},
+  {"transfermarkt_id":"GB1","football_data_code":"PL","playable":true},
+  {"transfermarkt_id":"ES1","football_data_code":"PD","playable":true},
+  {"transfermarkt_id":"L1","football_data_code":"BL1","playable":true},
+  {"transfermarkt_id":"FR1","football_data_code":"FL1","playable":true},
+  {"transfermarkt_id":"NL1","football_data_code":"DED","playable":true},
+  {"transfermarkt_id":"PO1","football_data_code":"PPL","playable":true},
+  {"transfermarkt_id":"CL","football_data_code":"CL","playable":false},
+  {"transfermarkt_id":"EL","football_data_code":null,"playable":false},
+  {"transfermarkt_id":"UCOL","football_data_code":null,"playable":false}
+]

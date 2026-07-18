@@ -123,6 +123,9 @@ class ClubEmbedBuilder:
 
             )
 
+        if club.get("logo"):
+            embed.set_thumbnail(url=club["logo"])
+
         if not data.get("initial_setup_complete", False):
 
             missing = []
@@ -148,3 +151,4 @@ class ClubEmbedBuilder:
             )
 
         return embed
+

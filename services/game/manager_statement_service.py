@@ -54,27 +54,9 @@ class ManagerStatementService:
         return draft.get("statement_status", "pending")
 
     def is_preparation_complete(self, manager_id):
-        formation = next(
-            (
-                item
-                for item in self.db.get_formations()
-                if item["manager_id"] == manager_id
-            ),
-            None
-        )
-
-        if formation is None:
-            return False
-
-        starting = formation.get("starting", {})
-
-        if len(starting) != 11:
-            return False
-
-        return any(
-            data.get("captain")
-            for data in starting.values()
-        )
+        # L'onboarding termina con pubblicazione o salto della dichiarazione.
+        # Formazione e capitano vengono gestiti con !formazione.
+        return self.get_current_status(manager_id) in ("published", "skipped")
 
     def can_complete(self, manager_id):
         status = self.get_current_status(manager_id)
@@ -171,3 +153,4 @@ class ManagerStatementService:
             channel_id=channel_id,
             message_id=message_id
         )
+

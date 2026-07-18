@@ -15,6 +15,48 @@ PRESS_ROOM_CHANNEL_ID = int(
     )
 )
 
+MANAGER_ROLE_ID = int(
+    os.getenv(
+        "MANAGER_ROLE_ID",
+        "1527984454595776553"
+    )
+)
+
+
+async def assign_manager_role(client, user_id):
+    """Assegna il ruolo Manager senza interrompere l'onboarding."""
+    for guild in client.guilds:
+        role = guild.get_role(MANAGER_ROLE_ID)
+        if role is None:
+            continue
+
+        member = guild.get_member(user_id)
+        if member is None:
+            try:
+                member = await guild.fetch_member(user_id)
+            except (discord.NotFound, discord.Forbidden, discord.HTTPException):
+                print(
+                    "ERRORE RUOLO MANAGER: utente non accessibile",
+                    user_id
+                )
+                return False
+
+        if role in member.roles:
+            return True
+
+        try:
+            await member.add_roles(
+                role,
+                reason="Onboarding Calcyscord.Manager completato"
+            )
+            return True
+        except (discord.Forbidden, discord.HTTPException) as error:
+            print("ERRORE ASSEGNAZIONE RUOLO MANAGER:", repr(error))
+            return False
+
+    print("ERRORE RUOLO MANAGER: ruolo non trovato", MANAGER_ROLE_ID)
+    return False
+
 
 class ManagerStatementEmbedBuilder:
     """Embed del percorso successivo alla conferma della rosa."""
@@ -194,6 +236,23 @@ class ManagerStatementEmbedBuilder:
         )
 
 
+    def build_complete(self, manager_id):
+        manager = self.db.get_manager_by_id(manager_id)
+        club = self.db.get_club_by_id(manager["club_id"])
+        embed = discord.Embed(
+            title="✅ Preparazione iniziale completata",
+            description=(
+                f"Il **{club['name']}** è stato registrato correttamente.\n\n"
+                "Usa ora `!formazione` per scegliere modulo, titolari e capitano. "
+                "Potrai modificarli in qualsiasi momento."
+            ),
+            colour=discord.Colour.green()
+        )
+        if club.get("logo"):
+            embed.set_thumbnail(url=club["logo"])
+        embed.set_footer(text="Onboarding completato • Prossimo comando: !formazione")
+        return embed
+
 async def get_press_room(client):
     channel = client.get_channel(PRESS_ROOM_CHANNEL_ID)
 
@@ -281,10 +340,11 @@ class ManagerStatementModal(discord.ui.Modal):
             interaction.user
         )
 
-        await interaction.response.send_message(
+        # La preview sostituisce il messaggio principale: in questo modo non
+        # resta una seconda schermata con i vecchi pulsanti dichiarazione.
+        await interaction.response.edit_message(
             embed=embed,
             view=preview_view,
-            ephemeral=True,
             allowed_mentions=discord.AllowedMentions.none()
         )
 
@@ -381,14 +441,16 @@ class SkipStatementButton(discord.ui.Button):
             )
             return
 
-        preparation_view = ClubPreparationView(self.view.manager_id)
+        await assign_manager_role(
+            interaction.client,
+            interaction.user.id
+        )
 
         await interaction.edit_original_response(
-            embed=preparation_view.embed_builder.build_preparation(
-                self.view.manager_id
-            ),
-            view=preparation_view
+            embed=self.view.embed_builder.build_complete(self.view.manager_id),
+            view=None
         )
+        self.view.stop()
 
 
 class ManagerStatementView(ManagerOnlyView):
@@ -465,26 +527,18 @@ class PublishStatementButton(discord.ui.Button):
             )
             return
 
-        preparation_view = ClubPreparationView(self.view.manager_id)
-        preparation_embed = (
-            preparation_view.embed_builder.build_preparation(
-                self.view.manager_id
-            )
+        await assign_manager_role(
+            interaction.client,
+            interaction.user.id
         )
 
         await interaction.edit_original_response(
-            embed=preparation_embed,
-            view=preparation_view
+            embed=self.view.embed_builder.build_complete(
+                self.view.manager_id
+            ),
+            view=None
         )
-
-        if self.view.original_message is not None:
-            try:
-                await self.view.original_message.edit(
-                    embed=preparation_embed,
-                    view=ClubPreparationView(self.view.manager_id)
-                )
-            except discord.HTTPException:
-                pass
+        self.view.stop()
 
 
 class ModifyStatementButton(discord.ui.Button):
@@ -516,14 +570,19 @@ class CancelStatementButton(discord.ui.Button):
         )
 
     async def callback(self, interaction):
+        from ui.initial_squad.initial_squad_embed import InitialSquadEmbedBuilder
+
+        service = InitialSquadService()
+        draft = service.get_draft(self.view.manager_id)
+        counts = service.get_role_counts(self.view.manager_id)
+        statement_view = ManagerStatementView(self.view.manager_id)
+
         await interaction.response.edit_message(
-            content=(
-                "Anteprima annullata. Puoi tornare al messaggio precedente "
-                "per scrivere una nuova dichiarazione oppure saltare."
-            ),
-            embed=None,
-            view=None
+            content=None,
+            embed=InitialSquadEmbedBuilder().build_confirmed(draft, counts),
+            view=statement_view
         )
+        statement_view.message = interaction.message
 
 
 class ManagerStatementPreviewView(ManagerOnlyView):
